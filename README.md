@@ -1,2 +1,2 @@
-# com.sixt.tool.goorange-crossplane
+# goorange-crossplane
 GoOrange Platform Crossplane
