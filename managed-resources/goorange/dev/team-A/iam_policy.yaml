@@ -1,0 +1,36 @@
+---
+apiVersion: iam.aws.crossplane.io/v1beta1
+kind: Policy
+metadata:
+  name: goorange-crossplane-example-bucket-policy
+spec:
+  deletionPolicy: Orphan
+  providerConfigRef:
+    name: aws-provider-config
+  forProvider:
+    description: "Test policy for irsa"
+    name: goorange-crossplane-example-bucket-policy
+    document: |
+      { 
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+              "Action": "s3:ListBucket",
+              "Effect": "Allow",
+              "Resource": [
+                  "arn:aws:s3:::goorange-crossplane-example-bucket-1"
+              ]
+          },
+          {
+              "Action": [
+                  "s3:PutObject",
+                  "s3:GetObject",
+                  "s3:DeleteObject"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                  "arn:aws:s3:::goorange-crossplane-example-bucket-1/*"
+              ]
+          }
+        ]
+      }

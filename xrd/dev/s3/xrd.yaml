@@ -1,0 +1,82 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xobjectstorages.sixt.com
+spec:
+  claimNames:
+    kind: ObjectStorage
+    plural: objectstorages
+  # This XRD defines an XR in the 'sixt.com' API group.
+  group: sixt.com
+  names:
+    kind: XObjectStorage
+    plural: xobjectstorages
+  # Each type of XR can declare any keys they write to their connection secret
+  # which will act as a filter during aggregation of the connection secret from
+  # composed resources. It's recommended to provide the set of keys here so that
+  # consumers of claims and XRs can see what to expect in the connection secret.
+  # If no key is given, then all keys in the aggregated connection secret will
+  # be written to the connection secret of the XR.
+  connectionSecretKeys:
+    - region
+    - bucket-name
+  versions:
+    - name: v1alpha1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          properties:
+            spec:
+              description: ObjectStorageSpec defines the desired state of ObjectStorage
+              properties:
+                resourceConfig:
+                  description: ResourceConfig defines general properties of this AWS resource.
+                  properties:
+                    deletionPolicy:
+                      description: Defaults to Delete
+                      enum:
+                      - Delete
+                      - Orphan
+                      type: string
+                    name:
+                      description: Set the name of this resource in AWS to the value provided by this field.
+                      type: string
+                    providerConfigName:
+                      description: Name of the provider config used to autheicate to AWS
+                      type: string
+                      default: "aws-provider-config"
+                    region:
+                      description: Name of the region
+                      enum:
+                      - "eu-central-1"
+                      type: string
+                      default: "eu-central-1"
+                    tags:
+                      items:
+                        properties:
+                          key:
+                            type: string
+                          value:
+                            type: string
+                        required:
+                        - key
+                        - value
+                        type: object
+                      type: array
+                  required:
+                  - name
+                  - tags
+                  type: object
+              required:
+              - resourceConfig
+              type: object
+            status:
+              description: ObjectStorageStatus defines the observed state of ObjectStorage
+              properties:
+                bucketName:
+                  type: string
+                bucketArn:
+                  type: string
+              type: object
+          type: object

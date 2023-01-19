@@ -1,0 +1,29 @@
+---
+apiVersion: sixt.com/v1alpha1
+kind: IRSA
+metadata:
+  name: goorange-crossplane-example-bucket-user
+  namespace: default
+spec:
+  compositionSelector:
+    matchLabels:
+      sixt.com/provider: aws
+      sixt.com/environment: dev
+      s3.sixt.com/configuration: standard
+      crossplace.io/xrd: xirsas.sixt.com
+  awsAccountID: "227837763243"
+  eksOIDC: https://oidc.eks.eu-central-1.amazonaws.com/id/617ED047799AA7C56628F947A6FE75D4
+  policyArns: ["arn:aws:iam::227837763243:policy/goorange-crossplane-example-bucket-policy"]
+  serviceAccountName: goorange-crossplane-example-bucket-user
+  namespace: default
+  resourceConfig:
+    name: goorange-crossplane-example-bucket-user
+    providerConfigName: aws-provider-config
+    region: eu-central-1
+    tags:
+    - key: Environment
+      value: dev
+    - key: ServiceName
+      value: goorange
+    - key: Name
+      value: goorange-crossplane-example-bucket-1
