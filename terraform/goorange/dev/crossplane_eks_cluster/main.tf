@@ -6,6 +6,12 @@ module "eks" {
 
   enable_irsa                     = true
   cluster_endpoint_private_access = true
+  cluster_endpoint_public_access  = true
+
+  cluster_endpoint_public_access_cidrs = concat(
+    local.sixt_pullach_allocation_restricted,
+    local.sixt_public_cidr,
+  )
 
   vpc_id = data.terraform_remote_state.networking.outputs.vpc_id
 

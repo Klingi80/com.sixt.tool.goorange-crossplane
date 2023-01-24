@@ -37,7 +37,7 @@ locals {
     launch_template_version = "$Latest"
     create_launch_template  = true
     iam_role_additional_policies = {
-      additional = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
+      amazon_ssm_managed_instance_core = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
     }
   }
 
@@ -58,6 +58,43 @@ locals {
       rolearn  = "arn:aws:iam::${local.account_id}:role/OrganizationAccountAccessRole"
       username = "admin:{{SessionName}}"
       groups   = ["system:masters"]
-    },
+    }
+  ]
+  sixt_pullach_allocation_restricted = [
+    "185.97.224.0/25",
+    "185.97.224.128/26",
+    "185.97.224.192/28",
+    "185.97.224.208/30",
+    "185.97.224.212/31",
+    "185.97.224.214/32",
+    "185.97.224.216/29",
+    "185.97.224.224/27",
+    "185.97.225.0/24",
+    "185.97.226.0/23"
+  ]
+
+  # sixt offices excluding pullach
+  sixt_public_cidr = [
+    #"176.37.169.140/32",  # kyiv
+    #"62.80.184.44/32",    # kyiv
+    #"213.159.246.16/32",  # kyiv
+    "52.208.230.210/32",  # goorange vpn
+    "14.143.35.46/32",    # Sixt R&D (India), TATA
+    "182.73.65.110/32",   # Sixt R&D (India), Airtel
+    "14.140.250.170/32",  # Sixt R&D (India)
+    "185.114.121.135/32", # cato fankfurt
+    "209.206.26.130/32",  # cato zürich
+    "185.114.122.114/32", # cato amsterdam
+    "209.206.13.75/32",   # cato milano
+    "209.206.8.10/32",    # cato paris
+    "185.114.123.77/32",  # cato london
+    "209.206.24.6/32",    # cato madrid
+    "140.82.201.38/32",   # cato India
+    "145.62.186.129/32",  # cato New York
+    "45.62.181.10/32",    # cato Miami
+    "45.62.177.196/32",   # cato Los Angeles
+    "45.62.178.190/32",   # cato Chicago
+    "185.114.121.45/32",  # cato Frankfurt
+    "45.62.181.32/32"     # USA office
   ]
 }
