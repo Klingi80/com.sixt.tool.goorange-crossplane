@@ -5,8 +5,8 @@ module "eks" {
   version         = "v19.5.1"
 
   enable_irsa                     = true
-  cluster_endpoint_private_access = true
-  cluster_endpoint_public_access  = true
+  cluster_endpoint_private_access = true # In this version of the module has cluster_endpoint_private_access value as true by default
+  cluster_endpoint_public_access  = true # In this version of the module has cluster_endpoint_public_access value as false by default
 
   cluster_endpoint_public_access_cidrs = concat(
     local.sixt_pullach_allocation_restricted,
@@ -29,9 +29,9 @@ module "eks" {
   cloudwatch_log_group_retention_in_days = 14
 
   cluster_encryption_config = {
-      provider_key_arn = aws_kms_key.key.arn
-      resources        = ["secrets"]
-    }
+    provider_key_arn = aws_kms_key.key.arn
+    resources        = ["secrets"]
+  }
 
   node_security_group_tags = {
     "kubernetes.io/cluster/${local.cluster_name}" = null

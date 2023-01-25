@@ -21,10 +21,10 @@ locals {
     enable                   = true
     provider_aws_version     = "v0.34.0"
     additional_irsa_policies = ["arn:aws:iam::aws:policy/AmazonS3FullAccess", "arn:aws:iam::aws:policy/IAMFullAccess"]
-    # name                     = "aws-provider"
-    # service_account          = "aws-provider"
-    # provider_config          = "default"
-    # controller_config        = "aws-controller-config"
+    name                     = "aws-provider"
+    service_account          = "aws-provider"
+    provider_config          = "default"
+    controller_config        = "aws-controller-configssssssss"
   }
 
   crossplane_kubernetes_provider = {

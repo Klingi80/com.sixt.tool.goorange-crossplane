@@ -1,5 +1,5 @@
 ---
-apiVersion: iam.aws.crossplane.io/v1beta1
+apiVersion: iam.aws.upbound.io/v1beta1
 kind: Policy
 metadata:
   name: goorange-crossplane-example-bucket-policy
@@ -9,8 +9,7 @@ spec:
     name: aws-provider-config
   forProvider:
     description: "Test policy for irsa"
-    name: goorange-crossplane-example-bucket-policy
-    document: |
+    policy: |
       { 
         "Version": "2012-10-17",
         "Statement": [
