@@ -21,6 +21,9 @@ spec:
             spec:
               description: IRSASpec defines the desired state of IRSA
               properties:
+                k8sProviderConfigRef:
+                  description: K8s Provider Config
+                  type: string
                 awsAccountID:
                   type: string
                 eksOIDC:
@@ -68,14 +71,12 @@ spec:
                   type: object
                 serviceAccountName:
                   type: string
-                namespace:
-                  type: string
               required:
               - awsAccountID
               - eksOIDC
               - serviceAccountName
               - resourceConfig
-              - namespace
+              - k8sProviderConfigRef
               type: object
             status:
               description: IRSAStatus defines the observed state of IRSA

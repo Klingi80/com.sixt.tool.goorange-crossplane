@@ -2,8 +2,8 @@
 apiVersion: sixt.com/v1alpha1
 kind: IRSA
 metadata:
-  name: goorange-crossplane-example-bucket-user
-  namespace: default
+  name: goorange-crossplane-example-irsa
+  namespace: crossplane-new-ns
 spec:
   compositionSelector:
     matchLabels:
@@ -12,12 +12,12 @@ spec:
       s3.sixt.com/configuration: standard
       crossplace.io/xrd: xirsas.sixt.com
   awsAccountID: "227837763243"
-  eksOIDC: https://oidc.eks.eu-central-1.amazonaws.com/id/617ED047799AA7C56628F947A6FE75D4
+  eksOIDC: https://oidc.eks.eu-central-1.amazonaws.com/id/4A85FB28B0938A6568CAB365A330333B
   policyArns: ["arn:aws:iam::227837763243:policy/goorange-crossplane-example-bucket-policy"]
-  serviceAccountName: goorange-crossplane-example-bucket-user
-  namespace: default
+  serviceAccountName: goorange-crossplane-example-irsa
+  k8sProviderConfigRef: kubernetes-provider-config
   resourceConfig:
-    name: goorange-crossplane-example-bucket-user
+    name: goorange-crossplane-example-irsa
     providerConfigName: aws-provider-config
     region: eu-central-1
     tags:

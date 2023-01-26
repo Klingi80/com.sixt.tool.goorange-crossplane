@@ -3,7 +3,11 @@ apiVersion: iam.aws.upbound.io/v1beta1
 kind: Policy
 metadata:
   name: goorange-crossplane-example-bucket-policy
+  namespace: crossplane-new-ns
 spec:
+  writeConnectionSecretToRef: 
+    name: goorange-crossplane-example-bucket-policy
+    namespace: crossplane-new-ns
   deletionPolicy: Orphan
   providerConfigRef:
     name: aws-provider-config
@@ -17,7 +21,7 @@ spec:
               "Action": "s3:ListBucket",
               "Effect": "Allow",
               "Resource": [
-                  "arn:aws:s3:::goorange-crossplane-example-bucket-1"
+                  "arn:aws:s3:::goorange-crossplane-example-bucket-5"
               ]
           },
           {
@@ -28,7 +32,7 @@ spec:
               ],
               "Effect": "Allow",
               "Resource": [
-                  "arn:aws:s3:::goorange-crossplane-example-bucket-1/*"
+                  "arn:aws:s3:::goorange-crossplane-example-bucket-5/*"
               ]
           }
         ]

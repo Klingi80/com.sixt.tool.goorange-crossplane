@@ -20,17 +20,14 @@ spec:
         - type: FromCompositeFieldPath
           fromFieldPath: spec.resourceConfig.deletionPolicy
           toFieldPath: spec.deletionPolicy
-        - type: FromCompositeFieldPath
-          fromFieldPath: spec.resourceConfig.region
-          toFieldPath: spec.forProvider.region
   resources:
     - name: iam-role
       base:
-        apiVersion: iam.aws.crossplane.io/v1beta1
+        apiVersion: iam.aws.upbound.io/v1beta1
         kind: Role
         spec:
           forProvider:
-            assumeRolePolicyDocument: ""
+            assumeRolePolicy: ""
       patches:
         - type: PatchSet
           patchSetName: common-fields
@@ -38,10 +35,16 @@ spec:
           fromFieldPath: status.atProvider.arn
           toFieldPath: status.roleArn
         - type: FromCompositeFieldPath
+          fromFieldPath: status.atProvider.id
+          toFieldPath: status.roleName
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.region
+          toFieldPath: spec.forProvider.region
+        - type: FromCompositeFieldPath
           fromFieldPath: spec.permissionsBoundaryArn
           toFieldPath: spec.forProvider.permissionsBoundary
         - type: CombineFromComposite
-          toFieldPath: spec.forProvider.assumeRolePolicyDocument
+          toFieldPath: spec.forProvider.assumeRolePolicy
           policy:
             fromFieldPath: Required
           combine:
@@ -49,7 +52,7 @@ spec:
             - fromFieldPath: spec.awsAccountID
             - fromFieldPath: spec.eksOIDC
             - fromFieldPath: spec.eksOIDC
-            - fromFieldPath: spec.namespace
+            - fromFieldPath: metadata.labels[crossplane.io/claim-namespace]
             - fromFieldPath: spec.serviceAccountName
             strategy: string
             string:
@@ -73,16 +76,19 @@ spec:
                 }
     - name: policy-attachment-1
       base:
-        apiVersion: iam.aws.crossplane.io/v1beta1
+        apiVersion: iam.aws.upbound.io/v1beta1
         kind: RolePolicyAttachment
         spec:
           forProvider:
             policyArn: ""
-            roleNameSelector:
+            roleSelector:
               matchControllerRef: true
       patches:
         - type: PatchSet
           patchSetName: common-fields
+        - type: FromCompositeFieldPath
+          fromFieldPath: status.roleName
+          toFieldPath: spec.forProvider.role
         - type: FromCompositeFieldPath
           fromFieldPath: spec.policyArns[0]
           toFieldPath: spec.forProvider.policyArn
@@ -97,15 +103,15 @@ spec:
               kind: ServiceAccount
               metadata:
                 name: ""
-                namespace: spec.namespace
+                namespace: ""
                 annotations:
                   eks.amazonaws.com/role-arn: ""
       patches:
         - type: FromCompositeFieldPath
-          fromFieldPath: spec.resourceConfig.providerConfigName
+          fromFieldPath: spec.k8sProviderConfigRef
           toFieldPath: spec.providerConfigRef.name
         - type: FromCompositeFieldPath
-          fromFieldPath: spec.namespace
+          fromFieldPath: metadata.labels[crossplane.io/claim-namespace]
           toFieldPath: spec.forProvider.manifest.metadata.namespace
         - type: FromCompositeFieldPath
           fromFieldPath: spec.serviceAccountName
