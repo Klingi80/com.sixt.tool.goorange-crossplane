@@ -74,13 +74,70 @@ spec:
                     }
                   ]
                 }
+    - name: iam-policy
+      base: 
+        apiVersion: iam.aws.upbound.io/v1beta1
+        kind: Policy
+        spec:
+          forProvider:
+            description: ""
+            policy: ""
+      patches:
+        - type: PatchSet
+          patchSetName: common-fields
+        - type: ToCompositeFieldPath
+          fromFieldPath: status.atProvider.arn
+          toFieldPath: status.policyArn
+        - type: CombineFromComposite
+          combine:
+            variables:
+            - fromFieldPath: spec.bucketName
+            strategy: string
+            string:
+              fmt: "IAM Policy for bucket %s created by crossplane"
+          toFieldPath: spec.forProvider.description
+        - type: CombineFromComposite
+          toFieldPath: spec.forProvider.policy
+          policy:
+            fromFieldPath: Required
+          combine:
+            variables:
+            - fromFieldPath: spec.bucketName
+            - fromFieldPath: spec.bucketName
+            strategy: string
+            string:
+              fmt: |
+                { 
+                  "Version": "2012-10-17",
+                  "Statement": [
+                    {
+                        "Action": "s3:ListBucket",
+                        "Effect": "Allow",
+                        "Resource": [
+                            "arn:aws:s3:::%s"
+                        ]
+                    },
+                    {
+                        "Action": [
+                            "s3:PutObject",
+                            "s3:GetObject",
+                            "s3:DeleteObject"
+                        ],
+                        "Effect": "Allow",
+                        "Resource": [
+                            "arn:aws:s3:::%s/*"
+                        ]
+                    }
+                  ]
+                }
     - name: policy-attachment-1
       base:
         apiVersion: iam.aws.upbound.io/v1beta1
         kind: RolePolicyAttachment
         spec:
           forProvider:
-            policyArn: ""
+            policyArnSelector:
+              matchControllerRef: true
             roleSelector:
               matchControllerRef: true
       patches:
@@ -90,7 +147,7 @@ spec:
           fromFieldPath: status.roleName
           toFieldPath: spec.forProvider.role
         - type: FromCompositeFieldPath
-          fromFieldPath: spec.policyArns[0]
+          fromFieldPath: status.policyArn
           toFieldPath: spec.forProvider.policyArn
     - name: service-account
       base:

@@ -2,8 +2,8 @@
 apiVersion: sixt.com/v1alpha1
 kind: ObjectStorage
 metadata:
-  name: goorange-crossplane-example-bucket-5
-  namespace: crossplane-new-ns
+  name: goorange-crossplane-example-bucket-6
+  namespace: crossplane-test-namespace
 spec:
   compositionSelector:
     matchLabels:
@@ -20,6 +20,6 @@ spec:
     - key: ServiceName
       value: goorange
     - key: Name
-      value: goorange-crossplane-example-bucket-5
-    name: goorange-crossplane-example-bucket-5
+      value: goorange-crossplane-example-bucket-6
+    name: goorange-crossplane-example-bucket-6
     providerConfigName: aws-provider-config

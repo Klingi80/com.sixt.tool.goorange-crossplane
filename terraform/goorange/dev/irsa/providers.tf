@@ -1,5 +1,5 @@
 provider "aws" {
-  region      = "eu-central-1"
+  region = "eu-central-1"
   assume_role {
     role_arn = "arn:aws:iam::227837763243:role/OrganizationAccountAccessRole"
   }
@@ -16,7 +16,7 @@ terraform {
 
   backend "s3" {
     bucket         = "sixt-terraform-state"
-    key            = "goorange/dev/crossplane_ek_cluster_aws_blueprint/terraform.tfstate"
+    key            = "goorange/dev/irsa/terraform.tfstate"
     region         = "eu-west-1"
     dynamodb_table = "terraform_state_lock"
   }

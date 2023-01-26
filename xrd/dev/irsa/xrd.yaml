@@ -30,10 +30,6 @@ spec:
                   type: string
                 permissionsBoundaryArn:
                   type: string
-                policyArns:
-                  items:
-                    type: string
-                  type: array
                 resourceConfig:
                   description: ResourceConfig defines general properties of this AWS
                     resource.
@@ -71,12 +67,15 @@ spec:
                   type: object
                 serviceAccountName:
                   type: string
+                bucketName:
+                  type: string
               required:
               - awsAccountID
               - eksOIDC
               - serviceAccountName
               - resourceConfig
               - k8sProviderConfigRef
+              - bucketName
               type: object
             status:
               description: IRSAStatus defines the observed state of IRSA
