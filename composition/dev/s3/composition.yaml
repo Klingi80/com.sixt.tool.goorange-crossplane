@@ -8,33 +8,16 @@ metadata:
     s3.sixt.com/configuration: standard
     crossplace.io/xrd: xobjectstorages.sixt.com
 spec:
-  # writeConnectionSecretsToNamespace: crossplane-system
   compositeTypeRef:
     apiVersion: sixt.com/v1alpha1
     kind: XObjectStorage
   resources:
     - name: s3-bucket
-      connectionDetails:
-        - name: bucket-name
-          fromConnectionSecretKey: endpoint
-        - name: region
-          fromConnectionSecretKey: region
       base:
         apiVersion: s3.aws.upbound.io/v1beta1
         kind: Bucket
         spec:
           deletionPolicy: Delete
-          forProvider:
-            acl: private
-            publicAccessBlockConfiguration:
-              blockPublicAcls: true
-              blockPublicPolicy: true
-              ignorePublicAcls: true
-              restrictPublicBuckets: true
-            serverSideEncryptionConfiguration:
-              rules:
-                - applyServerSideEncryptionByDefault:
-                    sseAlgorithm: AES256
       patches:
         - fromFieldPath: spec.resourceConfig.providerConfigName
           toFieldPath: spec.providerConfigRef.name
@@ -44,23 +27,48 @@ spec:
           toFieldPath: spec.forProvider.region
         - fromFieldPath: spec.resourceConfig.name
           toFieldPath: metadata.annotations[crossplane.io/external-name]
-        - fromFieldPath: spec.resourceConfig.tags
-          toFieldPath: spec.forProvider.tagging.tagSet
-          policy:
-            mergeOptions:
-              appendSlice: true
-              keepMapValues: true
-        - fromFieldPath: spec.resourceConfig.region
-          toFieldPath: spec.forProvider.locationConstraint
-        - fromFieldPath: metadata.labels[crossplane.io/claim-namespace]
-          toFieldPath: spec.writeConnectionSecretToRef.namespace
+        - fromFieldPath: spec.resourceConfig.environment
+          toFieldPath: spec.forProvider.tags.Environment
+        - fromFieldPath: spec.resourceConfig.name
+          toFieldPath: spec.forProvider.tags.Name
+        - fromFieldPath: spec.resourceConfig.managedBy
+          toFieldPath: spec.forProvider.tags.ManagedBy
+        - fromFieldPath: spec.resourceConfig.serviceName
+          toFieldPath: spec.forProvider.tags.ServiceName
         - fromFieldPath: metadata.annotations[crossplane.io/external-name]
           toFieldPath: status.bucketName
         - fromFieldPath: status.atProvider.arn
           toFieldPath: status.bucketArn
-        - fromFieldPath: metadata.labels[crossplane.io/claim-name]
-          toFieldPath: spec.writeConnectionSecretToRef.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-secret"
+    - name: s3-bucketpublicaccessblock
+      base:
+        apiVersion: s3.aws.upbound.io/v1beta1
+        kind: BucketPublicAccessBlock
+        spec:
+          deletionPolicy: Delete
+          blockPublicAcls: true
+          blockPublicPolicy: true
+          ignorePublicAcls: true
+          restrictPublicBuckets: true
+          forProvider:
+            bucketSelector:
+              matchControllerRef: true
+      patches:
+        - fromFieldPath: spec.resourceConfig.region
+          toFieldPath: spec.forProvider.region
+        - fromFieldPath: spec.resourceConfig.providerConfigName
+          toFieldPath: spec.providerConfigRef.name
+    - name: s3-bucketserversideencryptionconfiguration
+      base:
+        apiVersion: s3.aws.upbound.io/v1beta1
+        kind: BucketServerSideEncryptionConfiguration
+        spec:
+          deletionPolicy: Delete
+          forProvider:
+            bucketSelector:
+              matchControllerRef: true
+            rules:
+              - applyServerSideEncryptionByDefault:
+                  - sseAlgorithm: AES256
+      patches:
+        - fromFieldPath: spec.resourceConfig.providerConfigName
+          toFieldPath: spec.providerConfigRef.name

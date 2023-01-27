@@ -51,6 +51,15 @@ spec:
                       - "eu-central-1"
                       type: string
                       default: "eu-central-1"
+                    environment:
+                      type: string
+                      default: "Dev"
+                    managedBy:
+                      type: string
+                      default: "Crossplane"
+                    serviceName:
+                      type: string
+                      default: "Goorange"
                     tags:
                       items:
                         properties:
@@ -65,7 +74,6 @@ spec:
                       type: array
                   required:
                   - name
-                  - tags
                   - providerConfigName
                   type: object
               required:
