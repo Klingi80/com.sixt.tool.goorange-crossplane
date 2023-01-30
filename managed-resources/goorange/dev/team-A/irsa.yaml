@@ -11,19 +11,9 @@ spec:
       sixt.com/environment: dev
       s3.sixt.com/configuration: standard
       crossplace.io/xrd: xirsas.sixt.com
-  awsAccountID: "227837763243"
-  eksOIDC: https://oidc.eks.eu-central-1.amazonaws.com/id/4A85FB28B0938A6568CAB365A330333B
   serviceAccountName: goorange-crossplane-example-bucket-16-irsa
   bucketName: goorange-crossplane-example-bucket-16
   k8sProviderConfigRef: kubernetes-provider-config
   resourceConfig:
     name: goorange-crossplane-example-bucket-16-irsa
     providerConfigName: aws-provider-config
-    region: eu-central-1
-    tags:
-    - key: Environment
-      value: dev
-    - key: ServiceName
-      value: goorange
-    - key: Name
-      value: goorange-crossplane-example-bucket-16-irsa

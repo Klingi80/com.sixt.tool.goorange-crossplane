@@ -25,9 +25,17 @@ spec:
                   type: string
                 resourceConfig:
                   type: object
-                  description: ResourceConfig defines general properties of this AWS
-                    resource.
+                  description: ResourceConfig defines general properties of this AWS resource.
                   properties:
+                    environment:
+                      type: string
+                      default: "Dev"
+                    managedBy:
+                      type: string
+                      default: "Crossplane"
+                    serviceName:
+                      type: string
+                      default: "Goorange"
                     deletionPolicy:
                       description: Defaults to Delete
                       enum:
@@ -44,7 +52,7 @@ spec:
               - bucketName
               type: object
             status:
-              description: IRSAStatus defines the observed state of IRSA
+              description: Policy ARN
               properties:
                 policyArn:
                   type: string

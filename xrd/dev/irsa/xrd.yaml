@@ -26,8 +26,19 @@ spec:
                   type: string
                 awsAccountID:
                   type: string
+                  default: "227837763243"
                 eksOIDC:
                   type: string
+                  default: "https://oidc.eks.eu-central-1.amazonaws.com/id/4A85FB28B0938A6568CAB365A330333B"
+                environment:
+                  type: string
+                  default: "Dev"
+                managedBy:
+                  type: string
+                  default: "Crossplane"
+                serviceName:
+                  type: string
+                  default: "Goorange"
                 permissionsBoundaryArn:
                   type: string
                 resourceConfig:
@@ -47,7 +58,11 @@ spec:
                     providerConfigName:
                       type: string
                     region:
+                      description: Name of the region
+                      enum:
+                      - "eu-central-1"
                       type: string
+                      default: "eu-central-1"
                     tags:
                       items:
                         properties:

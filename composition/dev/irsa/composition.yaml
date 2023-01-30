@@ -20,6 +20,15 @@ spec:
         - type: FromCompositeFieldPath
           fromFieldPath: spec.resourceConfig.deletionPolicy
           toFieldPath: spec.deletionPolicy
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.environment
+          toFieldPath: spec.forProvider.tags.Environment
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.managedBy
+          toFieldPath: spec.forProvider.tags.ManagedBy
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.serviceName
+          toFieldPath: spec.forProvider.tags.ServiceName
   resources:
     - name: iam-role
       base:
