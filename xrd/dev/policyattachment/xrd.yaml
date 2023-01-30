@@ -1,0 +1,52 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xextrapolicyattachments.sixt.com
+spec:
+  claimNames:
+    kind: ExtraPolicyAttachment
+    plural: extrapolicyattachments
+  group: sixt.com
+  names:
+    kind: XExtraPolicyAttachment
+    plural: xextrapolicyattachments
+  versions:
+    - name: v1alpha1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          description: Attaching policy to an already existing role
+          properties:
+            spec:
+              description: Attaching policy to an already existing role
+              properties:
+                roleName:
+                  type: string
+                resourceConfig:
+                  type: object
+                  description: ResourceConfig defines general properties of this AWS
+                    resource.
+                  properties:
+                    deletionPolicy:
+                      description: Defaults to Delete
+                      enum:
+                      - Delete
+                      - Orphan
+                      type: string
+                    providerConfigName:
+                      type: string
+                bucketName:
+                  type: string
+              required:
+              - roleName
+              - resourceConfig
+              - bucketName
+              type: object
+            status:
+              description: IRSAStatus defines the observed state of IRSA
+              properties:
+                policyArn:
+                  type: string
+              type: object
+          type: object

@@ -2,7 +2,7 @@
 apiVersion: sixt.com/v1alpha1
 kind: IRSA
 metadata:
-  name: goorange-crossplane-example-bucket-6-irsa
+  name: goorange-crossplane-example-bucket-16-irsa
   namespace: crossplane-test-namespace
 spec:
   compositionSelector:
@@ -13,11 +13,11 @@ spec:
       crossplace.io/xrd: xirsas.sixt.com
   awsAccountID: "227837763243"
   eksOIDC: https://oidc.eks.eu-central-1.amazonaws.com/id/4A85FB28B0938A6568CAB365A330333B
-  serviceAccountName: goorange-crossplane-example-bucket-6-irsa
-  bucketName: goorange-crossplane-example-bucket-6
+  serviceAccountName: goorange-crossplane-example-bucket-16-irsa
+  bucketName: goorange-crossplane-example-bucket-16
   k8sProviderConfigRef: kubernetes-provider-config
   resourceConfig:
-    name: goorange-crossplane-example-bucket-6-irsa
+    name: goorange-crossplane-example-bucket-16-irsa
     providerConfigName: aws-provider-config
     region: eu-central-1
     tags:
@@ -26,4 +26,4 @@ spec:
     - key: ServiceName
       value: goorange
     - key: Name
-      value: goorange-crossplane-example-bucket-6-irsa
+      value: goorange-crossplane-example-bucket-16-irsa

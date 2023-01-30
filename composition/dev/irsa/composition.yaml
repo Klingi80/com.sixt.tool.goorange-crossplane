@@ -143,12 +143,6 @@ spec:
       patches:
         - type: PatchSet
           patchSetName: common-fields
-        - type: FromCompositeFieldPath
-          fromFieldPath: status.roleName
-          toFieldPath: spec.forProvider.role
-        - type: FromCompositeFieldPath
-          fromFieldPath: status.policyArn
-          toFieldPath: spec.forProvider.policyArn
     - name: service-account
       base:
         apiVersion: kubernetes.crossplane.io/v1alpha1

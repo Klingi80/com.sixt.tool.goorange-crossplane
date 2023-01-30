@@ -1,0 +1,96 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: extrapolicyattachment.sixt.com
+  labels:
+    sixt.com/provider: aws
+    sixt.com/environment: dev
+    s3.sixt.com/configuration: standard
+    crossplace.io/xrd: xextrapolicyattachments.sixt.com
+spec:
+  compositeTypeRef:
+    apiVersion: sixt.com/v1alpha1
+    kind: XExtraPolicyAttachment
+  patchSets:
+    - name: common-fields
+      patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.providerConfigName
+          toFieldPath: spec.providerConfigRef.name
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.deletionPolicy
+          toFieldPath: spec.deletionPolicy
+  resources:
+    - name: iam-policy
+      base: 
+        apiVersion: iam.aws.upbound.io/v1beta1
+        kind: Policy
+        spec:
+          forProvider:
+            description: ""
+            policy: ""
+      patches:
+        - type: PatchSet
+          patchSetName: common-fields
+        - type: ToCompositeFieldPath
+          fromFieldPath: status.atProvider.arn
+          toFieldPath: status.policyArn
+        - type: CombineFromComposite
+          combine:
+            variables:
+            - fromFieldPath: spec.bucketName
+            strategy: string
+            string:
+              fmt: "IAM Policy for bucket %s created by crossplane"
+          toFieldPath: spec.forProvider.description
+        - type: CombineFromComposite
+          toFieldPath: spec.forProvider.policy
+          policy:
+            fromFieldPath: Required
+          combine:
+            variables:
+            - fromFieldPath: spec.bucketName
+            - fromFieldPath: spec.bucketName
+            strategy: string
+            string:
+              fmt: |
+                { 
+                  "Version": "2012-10-17",
+                  "Statement": [
+                    {
+                        "Action": "s3:ListBucket",
+                        "Effect": "Allow",
+                        "Resource": [
+                            "arn:aws:s3:::%s"
+                        ]
+                    },
+                    {
+                        "Action": [
+                            "s3:PutObject",
+                            "s3:GetObject",
+                            "s3:DeleteObject"
+                        ],
+                        "Effect": "Allow",
+                        "Resource": [
+                            "arn:aws:s3:::%s/*"
+                        ]
+                    }
+                  ]
+                }
+    - name: policy-attachment-1
+      base:
+        apiVersion: iam.aws.upbound.io/v1beta1
+        kind: RolePolicyAttachment
+        spec:
+          forProvider:
+            policyArnSelector:
+              matchControllerRef: true
+      patches:
+        - type: PatchSet
+          patchSetName: common-fields
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.roleName
+          toFieldPath: spec.forProvider.role
+        - type: FromCompositeFieldPath
+          fromFieldPath: status.atProvider.id
+          toFieldPath: status.policyArn
