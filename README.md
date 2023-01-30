@@ -1,2 +1,71 @@
 # goorange-crossplane
 GoOrange Platform Crossplane
+
+# Details of XRD
+* IRSA : This XRD is responsible to creating a role, a policy, a policy attachment with the role and a service account in the k8s cluster
+* ObjectStorage : This XRD is responsible for creating a S3 bucket with public access blocked and sse enabled with AES256 algorithm
+* ExtraPolicyAttachment : This XRD is reponisble for creating a new policy and attaching it to an existing Role to allow the Service account to have RW access on the S3 bucket
+
+# Claims for developers
+* IRSA
+```
+---
+apiVersion: sixt.com/v1alpha1
+kind: IRSA
+metadata:
+  name: <name of irsa which is used for creating the role and policy>
+  namespace: <namespace where the bucket is claimed>
+spec:
+  compositionSelector:
+    matchLabels:
+      sixt.com/provider: aws
+      sixt.com/environment: dev
+      s3.sixt.com/configuration: standard
+      crossplace.io/xrd: xirsas.sixt.com
+  serviceAccountName: <name of the service account>
+  bucketName: <name of the bucket which is used in the policy>
+  k8sProviderConfigRef: kubernetes-provider-config
+  resourceConfig:
+    providerConfigName: aws-provider-config
+```
+
+# ObjectStorage
+```
+---
+apiVersion: sixt.com/v1alpha1
+kind: ObjectStorage
+metadata:
+  name: <name of the bucket>
+  namespace: <namespace where the bucket is claimed>
+spec:
+  compositionSelector:
+    matchLabels:
+      sixt.com/provider: aws
+      sixt.com/environment: dev
+      s3.sixt.com/configuration: standard
+      crossplace.io/xrd: xobjectstorages.sixt.com
+  resourceConfig:
+    name: <name of the bucket>
+    providerConfigName: aws-provider-config
+```
+
+# ExtraPolicyAttachment
+```
+---
+apiVersion: sixt.com/v1alpha1
+kind: ExtraPolicyAttachment
+metadata:
+  name: <name prefix used to create the policy>
+  namespace: <namespace where the bucket is claimed>
+spec:
+  compositionSelector:
+    matchLabels:
+      sixt.com/provider: aws
+      sixt.com/environment: dev
+      s3.sixt.com/configuration: standard
+      crossplace.io/xrd: xextrapolicyattachments.sixt.com
+  bucketName: <name of the bucket which is added in the policy>
+  roleName: <name of the role previously created>
+  resourceConfig:
+    providerConfigName: aws-provider-config
+```
