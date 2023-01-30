@@ -15,5 +15,4 @@ spec:
   bucketName: goorange-crossplane-example-bucket-16
   k8sProviderConfigRef: kubernetes-provider-config
   resourceConfig:
-    name: goorange-crossplane-example-bucket-16-irsa
     providerConfigName: aws-provider-config
