@@ -66,9 +66,11 @@ spec:
           forProvider:
             bucketSelector:
               matchControllerRef: true
-            rules:
+            rule:
               - applyServerSideEncryptionByDefault:
                   - sseAlgorithm: AES256
       patches:
         - fromFieldPath: spec.resourceConfig.providerConfigName
           toFieldPath: spec.providerConfigRef.name
+        - fromFieldPath: spec.resourceConfig.region
+          toFieldPath: spec.forProvider.region
