@@ -29,7 +29,7 @@ spec:
                   default: "227837763243"
                 eksOIDC:
                   type: string
-                  default: "https://oidc.eks.eu-central-1.amazonaws.com/id/4A85FB28B0938A6568CAB365A330333B"
+                  default: "oidc.eks.eu-central-1.amazonaws.com/id/4A85FB28B0938A6568CAB365A330333B"
                 environment:
                   type: string
                   default: "Dev"
@@ -57,12 +57,6 @@ spec:
                       type: string
                     providerConfigName:
                       type: string
-                    region:
-                      description: Name of the region
-                      enum:
-                      - "eu-central-1"
-                      type: string
-                      default: "eu-central-1"
                     tags:
                       items:
                         properties:
@@ -77,16 +71,12 @@ spec:
                       type: array
                   required:
                   - providerConfigName
-                  - region
-                  - tags
                   type: object
                 serviceAccountName:
                   type: string
                 bucketName:
                   type: string
               required:
-              - awsAccountID
-              - eksOIDC
               - serviceAccountName
               - resourceConfig
               - k8sProviderConfigRef
@@ -98,6 +88,8 @@ spec:
                 roleArn:
                   type: string
                 roleName:
+                  type: string
+                policyArn:
                   type: string
               type: object
           type: object

@@ -43,12 +43,9 @@ spec:
         - type: ToCompositeFieldPath
           fromFieldPath: status.atProvider.arn
           toFieldPath: status.roleArn
-        - type: FromCompositeFieldPath
+        - type: ToCompositeFieldPath
           fromFieldPath: status.atProvider.id
           toFieldPath: status.roleName
-        - type: FromCompositeFieldPath
-          fromFieldPath: spec.resourceConfig.region
-          toFieldPath: spec.forProvider.region
         - type: FromCompositeFieldPath
           fromFieldPath: spec.permissionsBoundaryArn
           toFieldPath: spec.forProvider.permissionsBoundary
