@@ -45,6 +45,7 @@ spec:
                     providerConfigName:
                       description: Name of the provider config used to autheicate to AWS
                       type: string
+                      default: "aws-provider-config"
                     region:
                       description: Name of the region
                       enum:
@@ -74,7 +75,6 @@ spec:
                       type: array
                   required:
                   - name
-                  - providerConfigName
                   type: object
               required:
               - resourceConfig

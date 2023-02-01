@@ -5,14 +5,5 @@ metadata:
   name: goorange-crossplane-example-bucket-16-irsa
   namespace: crossplane-test-namespace
 spec:
-  compositionSelector:
-    matchLabels:
-      sixt.com/provider: aws
-      sixt.com/environment: dev
-      s3.sixt.com/configuration: standard
-      crossplace.io/xrd: xirsas.sixt.com
   serviceAccountName: goorange-crossplane-example-bucket-16-irsa
   bucketName: goorange-crossplane-example-bucket-16
-  k8sProviderConfigRef: kubernetes-provider-config
-  resourceConfig:
-    providerConfigName: aws-provider-config

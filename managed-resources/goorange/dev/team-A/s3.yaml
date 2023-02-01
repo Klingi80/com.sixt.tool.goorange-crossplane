@@ -5,12 +5,5 @@ metadata:
   name: goorange-crossplane-example-bucket-16
   namespace: crossplane-test-namespace
 spec:
-  compositionSelector:
-    matchLabels:
-      sixt.com/provider: aws
-      sixt.com/environment: dev
-      s3.sixt.com/configuration: standard
-      crossplace.io/xrd: xobjectstorages.sixt.com
   resourceConfig:
     name: goorange-crossplane-example-bucket-16
-    providerConfigName: aws-provider-config

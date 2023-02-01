@@ -1,12 +1,7 @@
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: s3bucket.sixt.com
-  labels:
-    sixt.com/provider: aws
-    sixt.com/environment: dev
-    s3.sixt.com/configuration: standard
-    crossplace.io/xrd: xobjectstorages.sixt.com
+  name: objectstorage.sixt.com
 spec:
   compositeTypeRef:
     apiVersion: sixt.com/v1alpha1

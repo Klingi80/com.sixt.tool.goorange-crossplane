@@ -24,6 +24,7 @@ spec:
                 k8sProviderConfigRef:
                   description: K8s Provider Config
                   type: string
+                  default: "kubernetes-provider-config"
                 awsAccountID:
                   type: string
                   default: "227837763243"
@@ -57,6 +58,7 @@ spec:
                       type: string
                     providerConfigName:
                       type: string
+                      default: "aws-provider-config"
                     tags:
                       items:
                         properties:
@@ -78,8 +80,6 @@ spec:
                   type: string
               required:
               - serviceAccountName
-              - resourceConfig
-              - k8sProviderConfigRef
               - bucketName
               type: object
             status:

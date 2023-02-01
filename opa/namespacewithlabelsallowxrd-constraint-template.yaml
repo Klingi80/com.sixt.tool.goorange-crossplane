@@ -1,0 +1,21 @@
+
+
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: namespacewithlabelsallowxrd
+spec:
+  crd:
+    spec:
+      names:
+        kind: NamespaceWithLabelsAllowXRD
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package namespacewithlabelsallowxrd
+
+        violation[{"msg": msg}] {
+          ns := input.review.object.metadata.namespace
+          not data.inventory.cluster["v1"].Namespace[ns].metadata.labels.allowXRD
+          msg := sprintf("allowXRD label is missing in %v", [ns])
+        }

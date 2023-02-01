@@ -44,11 +44,11 @@ spec:
                       type: string
                     providerConfigName:
                       type: string
+                      default: "aws-provider-config"
                 bucketName:
                   type: string
               required:
               - roleName
-              - resourceConfig
               - bucketName
               type: object
             status:

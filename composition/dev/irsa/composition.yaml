@@ -2,11 +2,6 @@ apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
   name: irsa.sixt.com
-  labels:
-    sixt.com/provider: aws
-    sixt.com/environment: dev
-    s3.sixt.com/configuration: standard
-    crossplace.io/xrd: xirsas.sixt.com
 spec:
   compositeTypeRef:
     apiVersion: sixt.com/v1alpha1
