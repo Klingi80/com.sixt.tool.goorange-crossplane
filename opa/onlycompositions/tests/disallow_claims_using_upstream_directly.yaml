@@ -1,0 +1,21 @@
+---
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: Policy
+metadata:
+  name: sample-user-policy
+  namespace: crossplane-test-namespace
+spec:
+  providerConfigRef:
+    name: aws-provider-config
+  forProvider:
+    policy: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Action": ["qldb:*", "kinesis:*"],
+            "Effect": "Allow",
+            "Resource": "*"
+          }
+        ]
+      }

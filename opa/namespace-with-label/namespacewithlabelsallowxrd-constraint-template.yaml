@@ -1,9 +1,13 @@
-
-
+# This constraint template will look for the label allowXRD for a namespace
+# If its it allows the creation of the resource, else it prevents the creation of the resource
+---
 apiVersion: templates.gatekeeper.sh/v1beta1
 kind: ConstraintTemplate
 metadata:
   name: namespacewithlabelsallowxrd
+  annotations:
+    description: >-
+      Only allow claims to be created if the namespace is labeled with allowXRD for api groups sixt.com
 spec:
   crd:
     spec:

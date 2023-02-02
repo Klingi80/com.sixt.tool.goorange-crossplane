@@ -1,0 +1,18 @@
+---
+kind: Suite
+apiVersion: test.gatekeeper.sh/v1alpha1
+metadata:
+  name: disallow-direct-usage-of-aws-upbound-io
+tests:
+- name: disallow-direct-usage-of-aws-upbound-io
+  template: ../onlyxrdviacomposition-constraint-template.yaml
+  constraint: ../onlyxrdviacomposition-constraint.yaml
+  cases:
+  - name: claims using compostion
+    object: allow_claims_via_compositions.yaml
+    assertions:
+    - violations: no
+  - name: claims using upstream directly
+    object: disallow_claims_using_upstream_directly.yaml
+    assertions:
+    - violations: yes

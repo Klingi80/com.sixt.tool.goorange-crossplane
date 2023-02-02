@@ -1,0 +1,14 @@
+---
+kind: Suite
+apiVersion: test.gatekeeper.sh/v1alpha1
+metadata:
+  name: block-resource-creation-if-label-in-ns-is-missing
+tests:
+- name: block-resource-creation-if-label-in-ns-is-missing
+  template: ../namespacewithlabelsallowxrd-constraint-template.yaml
+  constraint: ../namespacewithlabelsallowxrd-constraint.yaml
+  cases:
+  - name: missing label in namespace
+    object: missing_label_in_ns.yaml
+    assertions:
+    - violations: yes

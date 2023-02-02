@@ -1,0 +1,22 @@
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: requirecomposition
+  annotations:
+    description: >-
+      Disallows managed resource creation without going through composition
+spec:
+  crd:
+    spec:
+      names:
+        kind: RequireComposition
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package requirecomposition
+
+        # this is necessary since there are no way to match based on glob expressions within constrains.
+        violation[{"msg": msg}] {
+          re_match("^.*.aws.upbound.io$", input.review.kind.group)
+          msg := "Cannot use aws.upbound.io directly, please use the XRD provided by SRE"
+        }
