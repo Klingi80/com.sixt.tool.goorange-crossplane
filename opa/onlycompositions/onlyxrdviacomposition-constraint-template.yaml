@@ -17,6 +17,6 @@ spec:
 
         # this is necessary since there are no way to match based on glob expressions within constrains.
         violation[{"msg": msg}] {
-          re_match("^.*.aws.upbound.io$", input.review.kind.group)
-          msg := "Cannot use aws.upbound.io directly, please use the XRD provided by SRE"
+          not input.review.object.metadata.labels["crossplane.io/composite"]
+          msg := "crossplane composition was not used not used"
         }

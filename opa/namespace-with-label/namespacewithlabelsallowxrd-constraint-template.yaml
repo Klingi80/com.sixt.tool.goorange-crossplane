@@ -21,5 +21,5 @@ spec:
         violation[{"msg": msg}] {
           ns := input.review.object.metadata.namespace
           not data.inventory.cluster["v1"].Namespace[ns].metadata.labels.allowXRD
-          msg := sprintf("allowXRD label is missing in %v", [ns])
+          msg := sprintf("allowXRD label is missing in %v %v", [ns,input.review])
         }
