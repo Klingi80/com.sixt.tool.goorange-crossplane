@@ -1,0 +1,242 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: xs3withirsa.sixt.com
+spec:
+  compositeTypeRef:
+    apiVersion: sixt.com/v1alpha1
+    kind: XS3WithIRSA
+  patchSets:
+    - name: common-fields
+      patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.providerConfigName
+          toFieldPath: spec.providerConfigRef.name
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.deletionPolicy
+          toFieldPath: spec.deletionPolicy
+    - name: common-tags
+      patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.environment
+          toFieldPath: spec.forProvider.tags.Environment
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.managedBy
+          toFieldPath: spec.forProvider.tags.ManagedBy
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.serviceName
+          toFieldPath: spec.forProvider.tags.ServiceName
+  resources:
+    - name: s3-bucket
+      base:
+        apiVersion: s3.aws.upbound.io/v1beta1
+        kind: Bucket
+        spec:
+          deletionPolicy: Delete
+      patches:
+        - type: PatchSet
+          patchSetName: common-fields
+        - type: PatchSet
+          patchSetName: common-tags
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.region
+          toFieldPath: spec.forProvider.region
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.bucketName
+          toFieldPath: metadata.annotations[crossplane.io/external-name]
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.bucketName
+          toFieldPath: spec.forProvider.tags.Name
+        - type: ToCompositeFieldPath
+          fromFieldPath: status.atProvider.arn
+          toFieldPath: status.bucketArn
+    - name: s3-bucketpublicaccessblock
+      base:
+        apiVersion: s3.aws.upbound.io/v1beta1
+        kind: BucketPublicAccessBlock
+        spec:
+          deletionPolicy: Delete
+          blockPublicAcls: true
+          blockPublicPolicy: true
+          ignorePublicAcls: true
+          restrictPublicBuckets: true
+          forProvider:
+            bucketSelector:
+              matchControllerRef: true
+      patches:
+        - type: PatchSet
+          patchSetName: common-fields
+        - fromFieldPath: spec.resourceConfig.region
+          toFieldPath: spec.forProvider.region
+    - name: s3-bucketserversideencryptionconfiguration
+      base:
+        apiVersion: s3.aws.upbound.io/v1beta1
+        kind: BucketServerSideEncryptionConfiguration
+        spec:
+          deletionPolicy: Delete
+          forProvider:
+            bucketSelector:
+              matchControllerRef: true
+            rule:
+              - applyServerSideEncryptionByDefault:
+                  - sseAlgorithm: AES256
+      patches:
+        - type: PatchSet
+          patchSetName: common-fields
+        - fromFieldPath: spec.resourceConfig.region
+          toFieldPath: spec.forProvider.region
+    - name: iam-role
+      base:
+        apiVersion: iam.aws.upbound.io/v1beta1
+        kind: Role
+        spec:
+          forProvider:
+            assumeRolePolicy: ""
+      patches:
+        - type: PatchSet
+          patchSetName: common-fields
+        - type: PatchSet
+          patchSetName: common-tags
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.roleName
+          toFieldPath: metadata.annotations[crossplane.io/external-name]
+        - type: ToCompositeFieldPath
+          fromFieldPath: status.atProvider.arn
+          toFieldPath: status.roleArn
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.permissionsBoundaryArn
+          toFieldPath: spec.forProvider.permissionsBoundary
+        - type: CombineFromComposite
+          toFieldPath: spec.forProvider.assumeRolePolicy
+          policy:
+            fromFieldPath: Required
+          combine:
+            variables:
+            - fromFieldPath: spec.resourceConfig.awsAccountID
+            - fromFieldPath: spec.resourceConfig.eksOIDC
+            - fromFieldPath: spec.resourceConfig.eksOIDC
+            - fromFieldPath: metadata.labels[crossplane.io/claim-namespace]
+            - fromFieldPath: spec.resourceConfig.serviceAccountName
+            strategy: string
+            string:
+              fmt: |
+                {
+                  "Version": "2012-10-17",
+                  "Statement": [
+                    {
+                      "Effect": "Allow",
+                      "Principal": {
+                        "Federated": "arn:aws:iam::%s:oidc-provider/%s"
+                      },
+                      "Action": "sts:AssumeRoleWithWebIdentity",
+                      "Condition": {
+                        "StringEquals": {
+                          "%s:sub": "system:serviceaccount:%s:%s"
+                        }
+                      }
+                    }
+                  ]
+                }
+    - name: iam-policy
+      base: 
+        apiVersion: iam.aws.upbound.io/v1beta1
+        kind: Policy
+        spec:
+          forProvider:
+            description: ""
+            policy: ""
+      patches:
+        - type: PatchSet
+          patchSetName: common-fields
+        - type: PatchSet
+          patchSetName: common-tags
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.policyName
+          toFieldPath: metadata.annotations[crossplane.io/external-name]
+        - type: ToCompositeFieldPath
+          fromFieldPath: status.atProvider.arn
+          toFieldPath: status.policyArn
+        - type: CombineFromComposite
+          combine:
+            variables:
+            - fromFieldPath: spec.resourceConfig.bucketName
+            strategy: string
+            string:
+              fmt: "IAM Policy for bucket %s created by crossplane"
+          toFieldPath: spec.forProvider.description
+        - type: CombineFromComposite
+          toFieldPath: spec.forProvider.policy
+          policy:
+            fromFieldPath: Required
+          combine:
+            variables:
+            - fromFieldPath: spec.resourceConfig.bucketName
+            - fromFieldPath: spec.resourceConfig.bucketName
+            strategy: string
+            string:
+              fmt: |
+                { 
+                  "Version": "2012-10-17",
+                  "Statement": [
+                    {
+                        "Action": "s3:ListBucket",
+                        "Effect": "Allow",
+                        "Resource": [
+                            "arn:aws:s3:::%s"
+                        ]
+                    },
+                    {
+                        "Action": [
+                            "s3:PutObject",
+                            "s3:GetObject",
+                            "s3:DeleteObject"
+                        ],
+                        "Effect": "Allow",
+                        "Resource": [
+                            "arn:aws:s3:::%s/*"
+                        ]
+                    }
+                  ]
+                }
+    - name: policy-attachment-1
+      base:
+        apiVersion: iam.aws.upbound.io/v1beta1
+        kind: RolePolicyAttachment
+        spec:
+          forProvider:
+            policyArnSelector:
+              matchControllerRef: true
+            roleSelector:
+              matchControllerRef: true
+      patches:
+        - type: PatchSet
+          patchSetName: common-fields
+    - name: service-account
+      base:
+        apiVersion: kubernetes.crossplane.io/v1alpha1
+        kind: Object
+        spec:
+          forProvider:
+            manifest:
+              apiVersion: v1
+              kind: ServiceAccount
+              metadata:
+                name: ""
+                namespace: ""
+                annotations:
+                  eks.amazonaws.com/role-arn: ""
+      patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.k8sProviderConfigRef
+          toFieldPath: spec.providerConfigRef.name
+        - type: FromCompositeFieldPath
+          fromFieldPath: metadata.labels[crossplane.io/claim-namespace]
+          toFieldPath: spec.forProvider.manifest.metadata.namespace
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.serviceAccountName
+          toFieldPath: spec.forProvider.manifest.metadata.name
+        - type: FromCompositeFieldPath
+          fromFieldPath: status.roleArn
+          toFieldPath: spec.forProvider.manifest.metadata.annotations[eks.amazonaws.com/role-arn]
+          policy:
+            fromFieldPath: Required

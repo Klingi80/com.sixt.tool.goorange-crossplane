@@ -1,0 +1,109 @@
+# XRD to create the s3 bucket and the associated irsa
+---
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xs3withirsas.sixt.com
+spec:
+  claimNames:
+    kind: S3WithIRSA
+    plural: s3withirsas
+  # This XRD defines an XR in the 'sixt.com' API group.
+  group: sixt.com
+  names:
+    kind: XS3WithIRSA
+    plural: xs3withirsas
+  versions:
+    - name: v1alpha1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          properties:
+            spec:
+              description: ObjectStorageSpec defines the desired state of ObjectStorage
+              properties:
+                resourceConfig:
+                  description: ResourceConfig defines general properties of this AWS resource.
+                  properties:
+                    k8sProviderConfigRef:
+                      description: K8s Provider Config
+                      type: string
+                      default: "kubernetes-provider-config"
+                    awsAccountID:
+                      description: Account ID
+                      type: string
+                      default: "227837763243"
+                    eksOIDC:
+                      description: EKS Cluster OIDC Endpoint
+                      type: string
+                      default: "oidc.eks.eu-central-1.amazonaws.com/id/4A85FB28B0938A6568CAB365A330333B"
+                    deletionPolicy:
+                      description: Defaults to Delete
+                      enum:
+                      - Delete
+                      - Orphan
+                      type: string
+                    bucketName:
+                      description: Name of the bucket
+                      type: string
+                    providerConfigName:
+                      description: Name of the provider config used to autheicate to AWS
+                      type: string
+                      default: "aws-provider-config"
+                    region:
+                      description: Name of the region
+                      enum:
+                      - "eu-central-1"
+                      type: string
+                      default: "eu-central-1"
+                    environment:
+                      type: string
+                      default: "Dev"
+                    managedBy:
+                      type: string
+                      default: "Crossplane"
+                    serviceName:
+                      type: string
+                      default: "Goorange"
+                    serviceAccountName:
+                      description: Name of the serviceaccount
+                      type: string
+                    roleName:
+                      description: Name of the Role
+                      type: string
+                    policyName:
+                      description: Name of the Policy
+                      type: string
+                    tags:
+                      items:
+                        properties:
+                          key:
+                            type: string
+                          value:
+                            type: string
+                        required:
+                        - key
+                        - value
+                        type: object
+                      type: array
+                  required:
+                  - bucketName
+                  - roleName
+                  - policyName
+                  - serviceAccountName
+                  type: object
+              required:
+              - resourceConfig
+              type: object
+            status:
+              description: ObjectStorageStatus defines the observed state of ObjectStorage
+              properties:
+                bucketArn:
+                  type: string
+                roleArn:
+                  type: string
+                policyArn:
+                  type: string
+              type: object
+          type: object
