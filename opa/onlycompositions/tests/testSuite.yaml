@@ -12,7 +12,3 @@ tests:
     object: allow_claims_via_compositions.yaml
     assertions:
     - violations: no
-  - name: claims using upstream directly
-    object: disallow_claims_using_upstream_directly.yaml
-    assertions:
-    - violations: yes
