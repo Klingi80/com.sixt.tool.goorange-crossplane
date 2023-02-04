@@ -12,3 +12,5 @@ spec:
         kinds: ["ExtraPolicyAttachment"]
       - apiGroups: ["sixt.com"]
         kinds: ["IRSA"]
+      - apiGroups: ["sixt.com"]
+        kinds: ["S3WithIRSA"]
