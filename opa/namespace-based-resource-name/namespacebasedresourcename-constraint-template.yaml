@@ -1,0 +1,21 @@
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: namespacebasedresourcename
+  annotations:
+    description: >-
+      All resources that are created will have namespace name in them to match what the team is managing
+spec:
+  crd:
+    spec:
+      names:
+        kind: NamespaceBasedResourceName
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package namespacebasedresourcename
+
+        violation[{"msg": msg}] {
+          not contains(input.review.object.metadata.name, input.review.object.metadata.namespace)
+          msg := "You are trying to use a resource that is not managed by your namespace"
+        }

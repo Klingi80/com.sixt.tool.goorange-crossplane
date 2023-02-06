@@ -1,0 +1,9 @@
+---
+apiVersion: sixt.com/v1alpha1
+kind: ObjectStorage
+metadata:
+  name: goorange-crossplane-example-bucket-16
+  namespace: another-namespace
+spec:
+  resourceConfig:
+    name: goorange-crossplane-example-bucket-16
