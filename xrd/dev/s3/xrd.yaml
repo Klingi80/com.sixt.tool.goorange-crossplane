@@ -45,7 +45,7 @@ spec:
                     providerConfigName:
                       description: Name of the provider config used to autheicate to AWS
                       type: string
-                      default: "aws-provider-config"
+                      default: "it-integration-aws-provider-config"
                     region:
                       description: Name of the region
                       enum:

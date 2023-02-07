@@ -41,9 +41,9 @@ spec:
                     deletionPolicy:
                       description: Defaults to Delete
                       enum:
-                      - Delete
                       - Orphan
                       type: string
+                      default: "Orphan"
                     bucketName:
                       description: Name of the bucket
                       type: string
@@ -60,20 +60,14 @@ spec:
                     environment:
                       type: string
                       default: "Dev"
+                    clusterName:
+                      type: string
+                      default: "go-main-dev"
                     managedBy:
                       type: string
                       default: "Crossplane"
                     serviceName:
-                      type: string
-                      default: "Goorange"
-                    serviceAccountName:
-                      description: Name of the serviceaccount
-                      type: string
-                    roleName:
-                      description: Name of the Role
-                      type: string
-                    policyName:
-                      description: Name of the Policy
+                      description: Name of the service which will also be used to generate the k8s sa
                       type: string
                     tags:
                       items:
@@ -89,9 +83,7 @@ spec:
                       type: array
                   required:
                   - bucketName
-                  - roleName
-                  - policyName
-                  - serviceAccountName
+                  - serviceName
                   type: object
               required:
               - resourceConfig

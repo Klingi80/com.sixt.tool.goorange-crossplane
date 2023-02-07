@@ -7,16 +7,16 @@ spec:
     apiVersion: sixt.com/v1alpha1
     kind: XS3WithIRSA
   patchSets:
+    - name: deletion-policy-fields
+      patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.deletionPolicy
+          toFieldPath: spec.deletionPolicy
     - name: common-fields
       patches:
         - type: FromCompositeFieldPath
           fromFieldPath: spec.resourceConfig.providerConfigName
           toFieldPath: spec.providerConfigRef.name
-        - type: FromCompositeFieldPath
-          fromFieldPath: spec.resourceConfig.deletionPolicy
-          toFieldPath: spec.deletionPolicy
-    - name: common-tags
-      patches:
         - type: FromCompositeFieldPath
           fromFieldPath: spec.resourceConfig.environment
           toFieldPath: spec.forProvider.tags.Environment
@@ -31,13 +31,11 @@ spec:
       base:
         apiVersion: s3.aws.upbound.io/v1beta1
         kind: Bucket
-        spec:
-          deletionPolicy: Delete
       patches:
         - type: PatchSet
-          patchSetName: common-fields
+          patchSetName: deletion-policy-fields
         - type: PatchSet
-          patchSetName: common-tags
+          patchSetName: common-fields
         - type: FromCompositeFieldPath
           fromFieldPath: spec.resourceConfig.region
           toFieldPath: spec.forProvider.region
@@ -55,7 +53,6 @@ spec:
         apiVersion: s3.aws.upbound.io/v1beta1
         kind: BucketPublicAccessBlock
         spec:
-          deletionPolicy: Delete
           blockPublicAcls: true
           blockPublicPolicy: true
           ignorePublicAcls: true
@@ -65,6 +62,8 @@ spec:
               matchControllerRef: true
       patches:
         - type: PatchSet
+          patchSetName: deletion-policy-fields
+        - type: PatchSet
           patchSetName: common-fields
         - fromFieldPath: spec.resourceConfig.region
           toFieldPath: spec.forProvider.region
@@ -73,7 +72,6 @@ spec:
         apiVersion: s3.aws.upbound.io/v1beta1
         kind: BucketServerSideEncryptionConfiguration
         spec:
-          deletionPolicy: Delete
           forProvider:
             bucketSelector:
               matchControllerRef: true
@@ -81,6 +79,8 @@ spec:
               - applyServerSideEncryptionByDefault:
                   - sseAlgorithm: AES256
       patches:
+        - type: PatchSet
+          patchSetName: deletion-policy-fields
         - type: PatchSet
           patchSetName: common-fields
         - fromFieldPath: spec.resourceConfig.region
@@ -90,15 +90,20 @@ spec:
         apiVersion: iam.aws.upbound.io/v1beta1
         kind: Role
         spec:
+          deletionPolicy: Delete
           forProvider:
             assumeRolePolicy: ""
       patches:
         - type: PatchSet
           patchSetName: common-fields
-        - type: PatchSet
-          patchSetName: common-tags
-        - type: FromCompositeFieldPath
-          fromFieldPath: spec.resourceConfig.roleName
+        - type: CombineFromComposite
+          combine:
+            variables:
+            - fromFieldPath: spec.resourceConfig.clusterName
+            - fromFieldPath: spec.resourceConfig.serviceName
+            strategy: string
+            string:
+              fmt: "k8s-sa-%s-%s"
           toFieldPath: metadata.annotations[crossplane.io/external-name]
         - type: ToCompositeFieldPath
           fromFieldPath: status.atProvider.arn
@@ -116,7 +121,7 @@ spec:
             - fromFieldPath: spec.resourceConfig.eksOIDC
             - fromFieldPath: spec.resourceConfig.eksOIDC
             - fromFieldPath: metadata.labels[crossplane.io/claim-namespace]
-            - fromFieldPath: spec.resourceConfig.serviceAccountName
+            - fromFieldPath: spec.resourceConfig.serviceName
             strategy: string
             string:
               fmt: |
@@ -142,16 +147,21 @@ spec:
         apiVersion: iam.aws.upbound.io/v1beta1
         kind: Policy
         spec:
+          deletionPolicy: Delete
           forProvider:
             description: ""
             policy: ""
       patches:
         - type: PatchSet
           patchSetName: common-fields
-        - type: PatchSet
-          patchSetName: common-tags
-        - type: FromCompositeFieldPath
-          fromFieldPath: spec.resourceConfig.policyName
+        - type: CombineFromComposite
+          combine:
+            variables:
+            - fromFieldPath: spec.resourceConfig.clusterName
+            - fromFieldPath: spec.resourceConfig.serviceName
+            strategy: string
+            string:
+              fmt: "k8s-sa-policy-%s-%s"
           toFieldPath: metadata.annotations[crossplane.io/external-name]
         - type: ToCompositeFieldPath
           fromFieldPath: status.atProvider.arn
@@ -203,6 +213,7 @@ spec:
         apiVersion: iam.aws.upbound.io/v1beta1
         kind: RolePolicyAttachment
         spec:
+          deletionPolicy: Delete
           forProvider:
             policyArnSelector:
               matchControllerRef: true
@@ -233,7 +244,7 @@ spec:
           fromFieldPath: metadata.labels[crossplane.io/claim-namespace]
           toFieldPath: spec.forProvider.manifest.metadata.namespace
         - type: FromCompositeFieldPath
-          fromFieldPath: spec.resourceConfig.serviceAccountName
+          fromFieldPath: spec.resourceConfig.serviceName
           toFieldPath: spec.forProvider.manifest.metadata.name
         - type: FromCompositeFieldPath
           fromFieldPath: status.roleArn

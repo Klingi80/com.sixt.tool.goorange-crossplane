@@ -9,9 +9,17 @@ spec:
   patchSets:
     - name: common-fields
       patches:
-        - type: FromCompositeFieldPath
-          fromFieldPath: spec.resourceConfig.providerConfigName
+        - type: CombineFromComposite
+          policy:
+            fromFieldPath: Required
+          fromFieldPath: metadata.labels[crossplane.io/claim-namespace]
           toFieldPath: spec.providerConfigRef.name
+          combine:
+            variables:
+              - fromFieldPath: metadata.labels[crossplane.io/claim-namespace]
+            strategy: string
+            string:
+              fmt: "%s-aws-provider-config"
         - type: FromCompositeFieldPath
           fromFieldPath: spec.resourceConfig.deletionPolicy
           toFieldPath: spec.deletionPolicy

@@ -1,0 +1,27 @@
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: servicenamepatternmatch
+  annotations:
+    description: >-
+      The service name provided by the developer in the claim should match the pattern com-sixt-(service|api-v[1-9]{1})-[-a-z]+
+spec:
+  crd:
+    spec:
+      names:
+        kind: ServiceNamePatternMatch
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package servicenamepatternmatch
+
+        default match_pattern = false
+
+        match_pattern = true {
+          regex.match("com-sixt-(service|api-v[1-9]{1})-[-a-z]+", input.review.object.spec.resourceConfig.serviceName)
+        }
+
+        violation[{"msg": msg}] {
+          not match_pattern
+          msg := "The serviceName should be of the pattern com-sixt-(service|api-v[1-9]{1})-[-a-z]+ \nExample: com-sixt-api-v1-subscription or com-sixt-service-subscription"
+        }

@@ -3,7 +3,7 @@ apiVersion: sixt.com/v1alpha1
 kind: ObjectStorage
 metadata:
   name: goorange-crossplane-example-bucket-17
-  namespace: testing
+  namespace: it-integration
 spec:
   resourceConfig:
     name: goorange-crossplane-example-bucket-17
