@@ -13,7 +13,7 @@ tests:
     inventory:
     - samples/data_object_bucketName.yaml # This contains a sample to mock an already existing object
     assertions:
-    - violations: no
+    - violations: yes
   - name: disallow serviceName reuse
     object: disallow_serviceName_reuse.yaml
     inventory:

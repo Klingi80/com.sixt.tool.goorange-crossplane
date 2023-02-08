@@ -10,7 +10,6 @@ spec:
       kind: Namespace
       metadata:
         labels:
-          example: "true"
           allowXRD: "true"
   providerConfigRef:
     name: kubernetes-provider-config # Refer this file for providerConfigRef.name -> bootstrap/terraform/crossplane-providers/kubernetes-provider.yaml
