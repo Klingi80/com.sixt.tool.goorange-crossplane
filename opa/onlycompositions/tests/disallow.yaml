@@ -1,9 +1,22 @@
 ---
-apiVersion: sixt.com/v1alpha1
-kind: ExtraPolicyAttachment
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: Policy
 metadata:
-  name: goorange-crossplane-example-bucket-17-policy
-  namespace: crossplane-test-namespace
+  annotations:
+    meta.upbound.io/example-id: qldb/v1beta1/stream
+  labels:
+    testing.upbound.io/example-name: policy
+  name: sample-user-policy
 spec:
-  bucketName: goorange-crossplane-example-bucket-17
-  roleName: goorange-crossplane-example-bucket-16-irsa-4jn69-4j774
+  forProvider:
+    policy: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Action": ["qldb:*", "kinesis:*"],
+            "Effect": "Allow",
+            "Resource": "*"
+          }
+        ]
+      }

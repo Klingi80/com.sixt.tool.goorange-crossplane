@@ -1,9 +1,0 @@
----
-apiVersion: sixt.com/v1alpha1
-kind: ExtraPolicyAttachment
-metadata:
-  name: it-integration-goorange-crossplane-example-bucket-17-policy
-  namespace: it-integration
-spec:
-  bucketName: goorange-crossplane-example-bucket-17
-  roleName: k8s-sa-it-integration-aws-provider-admin-dev

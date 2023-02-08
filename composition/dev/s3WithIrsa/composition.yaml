@@ -251,3 +251,6 @@ spec:
           toFieldPath: spec.forProvider.manifest.metadata.annotations[eks.amazonaws.com/role-arn]
           policy:
             fromFieldPath: Required
+        - type: ToCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.serviceName
+          toFieldPath: status.serviceAccountDetails

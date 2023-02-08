@@ -40,4 +40,15 @@ spec:
               "serviceName %v is already managed by %v S3WithIRSA Claim in %v namespace",
               [review.object.spec.resourceConfig.serviceName, s3withirsa.metadata.name, s3withirsa.metadata.namespace],
             )
-        }     
+        }
+
+        violation[{"msg": msg}] {
+            review := input.review
+            objectstorage := data.inventory.namespace[_]["sixt.com/v1alpha1"].ObjectStorage[_]
+            review.object.spec.resourceConfig.bucketName == objectstorage.spec.resourceConfig.bucketName
+            not identicalMetadata(objectstorage, review)
+            msg := sprintf(
+              "bucketName %v is already managed by %v ObjectStorage Claim in %v namespace",
+              [review.object.spec.resourceConfig.bucketName, objectstorage.metadata.name, objectstorage.metadata.namespace],
+            )
+        }

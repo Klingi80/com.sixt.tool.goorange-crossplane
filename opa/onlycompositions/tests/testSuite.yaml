@@ -12,7 +12,7 @@ tests:
     object: allow.yaml
     assertions:
     - violations: no
-  - name: claims using compostion
+  - name: claims not using compostion
     object: disallow.yaml
     assertions:
-    - violations: no
+    - violations: yes

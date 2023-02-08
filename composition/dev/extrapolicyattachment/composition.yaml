@@ -9,17 +9,9 @@ spec:
   patchSets:
     - name: common-fields
       patches:
-        - type: CombineFromComposite
-          policy:
-            fromFieldPath: Required
-          fromFieldPath: metadata.labels[crossplane.io/claim-namespace]
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.providerConfigName
           toFieldPath: spec.providerConfigRef.name
-          combine:
-            variables:
-              - fromFieldPath: metadata.labels[crossplane.io/claim-namespace]
-            strategy: string
-            string:
-              fmt: "%s-aws-provider-config"
         - type: FromCompositeFieldPath
           fromFieldPath: spec.resourceConfig.deletionPolicy
           toFieldPath: spec.deletionPolicy
@@ -38,19 +30,29 @@ spec:
         apiVersion: iam.aws.upbound.io/v1beta1
         kind: Policy
         spec:
+          deletionPolicy: Delete
           forProvider:
             description: ""
             policy: ""
       patches:
         - type: PatchSet
           patchSetName: common-fields
+        - type: CombineFromComposite
+          combine:
+            variables:
+            - fromFieldPath: spec.resourceConfig.clusterName
+            - fromFieldPath: spec.resourceConfig.bucketName
+            strategy: string
+            string:
+              fmt: "k8s-sa-extra-policy-%s-%s"
+          toFieldPath: metadata.annotations[crossplane.io/external-name]
         - type: ToCompositeFieldPath
           fromFieldPath: status.atProvider.arn
           toFieldPath: status.policyArn
         - type: CombineFromComposite
           combine:
             variables:
-            - fromFieldPath: spec.bucketName
+            - fromFieldPath: spec.resourceConfig.bucketName
             strategy: string
             string:
               fmt: "IAM Policy for bucket %s created by crossplane"
@@ -61,8 +63,8 @@ spec:
             fromFieldPath: Required
           combine:
             variables:
-            - fromFieldPath: spec.bucketName
-            - fromFieldPath: spec.bucketName
+            - fromFieldPath: spec.resourceConfig.bucketName
+            - fromFieldPath: spec.resourceConfig.bucketName
             strategy: string
             string:
               fmt: |
@@ -100,6 +102,12 @@ spec:
       patches:
         - type: PatchSet
           patchSetName: common-fields
-        - type: FromCompositeFieldPath
-          fromFieldPath: spec.roleName
+        - type: CombineFromComposite
+          combine:
+            variables:
+            - fromFieldPath: spec.resourceConfig.clusterName
+            - fromFieldPath: spec.resourceConfig.serviceName
+            strategy: string
+            string:
+              fmt: "k8s-sa-%s-%s"
           toFieldPath: spec.forProvider.role

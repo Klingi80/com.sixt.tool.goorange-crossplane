@@ -21,8 +21,6 @@ spec:
             spec:
               description: Attaching policy to an already existing role
               properties:
-                roleName:
-                  type: string
                 resourceConfig:
                   type: object
                   description: ResourceConfig defines general properties of this AWS resource.
@@ -35,7 +33,6 @@ spec:
                       default: "Crossplane"
                     serviceName:
                       type: string
-                      default: "Goorange"
                     deletionPolicy:
                       description: Defaults to Delete
                       enum:
@@ -45,12 +42,16 @@ spec:
                     providerConfigName:
                       type: string
                       default: "aws-provider-config"
-                bucketName:
-                  type: string
+                    bucketName:
+                      type: string
+                    clusterName:
+                      type: string
+                      default: "go-main-dev"
+                  required:
+                  - serviceName
+                  - bucketName
               required:
-              - roleName
-              - bucketName
-              type: object
+              - resourceConfig
             status:
               description: Policy ARN
               properties:

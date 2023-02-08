@@ -97,5 +97,7 @@ spec:
                   type: string
                 policyArn:
                   type: string
+                serviceAccount:
+                  type: string
               type: object
           type: object

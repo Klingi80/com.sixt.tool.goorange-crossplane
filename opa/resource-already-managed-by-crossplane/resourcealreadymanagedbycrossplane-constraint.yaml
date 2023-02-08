@@ -7,3 +7,5 @@ spec:
     kinds:
       - apiGroups: ["sixt.com"]
         kinds: ["S3WithIRSA"]
+      - apiGroups: ["sixt.com"]
+        kinds: ["ObjectStorage"]

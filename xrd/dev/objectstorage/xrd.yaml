@@ -36,16 +36,16 @@ spec:
                     deletionPolicy:
                       description: Defaults to Delete
                       enum:
-                      - Delete
                       - Orphan
                       type: string
-                    name:
+                      default: "Orphan"
+                    bucketName:
                       description: Set the name of this resource in AWS to the value provided by this field.
                       type: string
                     providerConfigName:
                       description: Name of the provider config used to autheicate to AWS
                       type: string
-                      default: "it-integration-aws-provider-config"
+                      default: "aws-provider-config"
                     region:
                       description: Name of the region
                       enum:
@@ -74,7 +74,7 @@ spec:
                         type: object
                       type: array
                   required:
-                  - name
+                  - bucketName
                   type: object
               required:
               - resourceConfig

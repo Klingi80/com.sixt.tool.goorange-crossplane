@@ -1,0 +1,10 @@
+---
+apiVersion: sixt.com/v1alpha1
+kind: ExtraPolicyAttachment
+metadata:
+  name: goorange-extra-policy-attachment-example
+  namespace: crossplane-test-namespace
+spec:
+  resourceConfig:
+    bucketName: goorange-s3-example-bucket-20
+    serviceName: com-sixt-service-test
