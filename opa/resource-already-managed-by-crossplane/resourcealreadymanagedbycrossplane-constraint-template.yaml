@@ -26,7 +26,7 @@ spec:
             review.object.spec.resourceConfig.bucketName == s3withirsa.spec.resourceConfig.bucketName
             not identicalMetadata(s3withirsa, review)
             msg := sprintf(
-              "%v is already managed by %v CR in %v namespace",
+              "bucketName %v is already managed by %v S3WithIRSA Claim in %v namespace",
               [review.object.spec.resourceConfig.bucketName, s3withirsa.metadata.name, s3withirsa.metadata.namespace],
             )
         }
@@ -37,7 +37,7 @@ spec:
             review.object.spec.resourceConfig.serviceName == s3withirsa.spec.resourceConfig.serviceName
             not identicalMetadata(s3withirsa, review)
             msg := sprintf(
-              "%v is already managed by %v CR in %v namespace",
+              "serviceName %v is already managed by %v S3WithIRSA Claim in %v namespace",
               [review.object.spec.resourceConfig.serviceName, s3withirsa.metadata.name, s3withirsa.metadata.namespace],
             )
         }     

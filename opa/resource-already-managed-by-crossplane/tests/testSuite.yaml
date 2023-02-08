@@ -8,9 +8,15 @@ tests:
   template: ../resourcealreadymanagedbycrossplane-constraint-template.yaml
   constraint: ../resourcealreadymanagedbycrossplane-constraint.yaml
   cases:
-  - name: disallow
-    object: disallow.yaml
+  - name: disallow bucketName reuse
+    object: disallow_bucketName_reuse.yaml
     inventory:
-    - samples/data_objects.yaml # This contains a sample to mock an already existing object
+    - samples/data_object_bucketName.yaml # This contains a sample to mock an already existing object
+    assertions:
+    - violations: no
+  - name: disallow serviceName reuse
+    object: disallow_serviceName_reuse.yaml
+    inventory:
+    - samples/data_object_serviceName.yaml # This contains a sample to mock an already existing object
     assertions:
     - violations: yes
