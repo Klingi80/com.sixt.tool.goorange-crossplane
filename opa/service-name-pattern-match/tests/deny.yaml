@@ -1,0 +1,10 @@
+---
+apiVersion: sixt.com/v1alpha1
+kind: S3WithIRSA
+metadata:
+  name: goorange-s3-with-irsa-example
+  namespace: crossplane-test-namespace
+spec:
+  resourceConfig:
+    bucketName: goorange-s3-with-irsa-example-bucket-20
+    serviceName: com.sixt.service.test

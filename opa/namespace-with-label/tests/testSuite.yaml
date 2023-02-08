@@ -9,6 +9,8 @@ tests:
   constraint: ../namespacewithlabelsallowxrd-constraint.yaml
   cases:
   - name: missing label in namespace
-    object: missing_label_in_ns.yaml
+    object: createObject.yaml
+    inventory:
+    - samples/namespace_without_label.yaml # This mocks the namespace without label
     assertions:
     - violations: yes

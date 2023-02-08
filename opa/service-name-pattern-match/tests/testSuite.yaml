@@ -1,0 +1,18 @@
+---
+kind: Suite
+apiVersion: test.gatekeeper.sh/v1alpha1
+metadata:
+  name: service-name-pattern-match
+tests:
+- name: service-name-pattern-match
+  template: ../servicenamepatternmatch-constraint-template.yaml
+  constraint: ../servicenamepatternmatch-constraint.yaml
+  cases:
+  - name: allow
+    object: allow.yaml
+    assertions:
+    - violations: no
+  - name: deny
+    object: deny.yaml
+    assertions:
+    - violations: yes

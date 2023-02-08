@@ -1,0 +1,43 @@
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: resourcealreadymanagedbycrossplane
+  annotations:
+    description: >-
+      bucketname and servicename used in S3WithIRSA cannot be reused in a different namespace or on a different k8s object name
+spec:
+  crd:
+    spec:
+      names:
+        kind: ResourceAlreadyManagedByCrossplane
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package resourcealreadymanagedbycrossplane
+
+        identicalMetadata(obj, review) {
+            obj.metadata.namespace == review.object.metadata.namespace
+            obj.metadata.name == review.object.metadata.name
+        }
+
+        violation[{"msg": msg}] {
+            review := input.review
+            s3withirsa := data.inventory.namespace[_]["sixt.com/v1alpha1"].S3WithIRSA[_]
+            review.object.spec.resourceConfig.bucketName == s3withirsa.spec.resourceConfig.bucketName
+            not identicalMetadata(s3withirsa, review)
+            msg := sprintf(
+              "%v is already managed by %v CR in %v namespace",
+              [review.object.spec.resourceConfig.bucketName, s3withirsa.metadata.name, s3withirsa.metadata.namespace],
+            )
+        }
+
+        violation[{"msg": msg}] {
+            review := input.review
+            s3withirsa := data.inventory.namespace[_]["sixt.com/v1alpha1"].S3WithIRSA[_]
+            review.object.spec.resourceConfig.serviceName == s3withirsa.spec.resourceConfig.serviceName
+            not identicalMetadata(s3withirsa, review)
+            msg := sprintf(
+              "%v is already managed by %v CR in %v namespace",
+              [review.object.spec.resourceConfig.serviceName, s3withirsa.metadata.name, s3withirsa.metadata.namespace],
+            )
+        }     

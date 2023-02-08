@@ -11,3 +11,6 @@ spec:
       - group: ""
         version: "v1"
         kind: "Namespace"
+      - group: "sixt.com"
+        version: "v1alpha1"
+        kind: "S3WithIRSA"

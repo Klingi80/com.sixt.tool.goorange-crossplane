@@ -9,6 +9,10 @@ tests:
   constraint: ../onlyxrdviacomposition-constraint.yaml
   cases:
   - name: claims using compostion
-    object: allow_claims_via_compositions.yaml
+    object: allow.yaml
+    assertions:
+    - violations: no
+  - name: claims using compostion
+    object: disallow.yaml
     assertions:
     - violations: no

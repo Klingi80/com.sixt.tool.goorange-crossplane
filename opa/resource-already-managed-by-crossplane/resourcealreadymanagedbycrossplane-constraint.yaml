@@ -1,0 +1,9 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: ResourceAlreadyManagedByCrossplane
+metadata:
+  name: resource-already-managed-by-crossplane
+spec:
+  match:
+    kinds:
+      - apiGroups: ["sixt.com"]
+        kinds: ["S3WithIRSA"]
