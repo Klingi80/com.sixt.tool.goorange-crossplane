@@ -6,4 +6,4 @@ metadata:
   namespace: testing
 spec:
   resourceConfig:
-    name: goorange-crossplane-example-bucket-16
+    bucketName: goorange-s3-example-bucket-16

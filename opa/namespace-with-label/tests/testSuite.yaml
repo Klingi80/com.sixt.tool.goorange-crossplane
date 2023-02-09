@@ -14,3 +14,9 @@ tests:
     - samples/namespace_without_label.yaml # This mocks the namespace without label
     assertions:
     - violations: yes
+  - name: label present in namespace
+    object: createObject.yaml
+    inventory:
+    - samples/namespace_with_label.yaml # This mocks the namespace with label
+    assertions:
+    - violations: no
