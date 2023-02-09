@@ -8,7 +8,12 @@ module "irsa_aws_provider_admin" {
   environment_name = "dev"
 }
 
-resource "aws_iam_role_policy_attachment" "irsa" {
-    policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+resource "aws_iam_role_policy_attachment" "irsa_s3_full_access" {
+    policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+    role       = module.irsa_aws_provider_admin.role_name
+}
+
+resource "aws_iam_role_policy_attachment" "irsa_iam_full_access" {
+    policy_arn = "arn:aws:iam::aws:policy/IAMFullAccess"
     role       = module.irsa_aws_provider_admin.role_name
 }
