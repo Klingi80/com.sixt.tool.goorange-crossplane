@@ -21,7 +21,7 @@ spec:
         openAPIV3Schema:
           properties:
             spec:
-              description: ObjectStorageSpec defines the desired state of ObjectStorage
+              description: S3WithIRSASpec defines the desired state of S3WithIRSA
               properties:
                 resourceConfig:
                   description: ResourceConfig defines general properties of this AWS resource.
@@ -89,7 +89,7 @@ spec:
               - resourceConfig
               type: object
             status:
-              description: ObjectStorageStatus defines the observed state of ObjectStorage
+              description: S3WithIRSAStatus defines the observed state of S3WithIRSA
               properties:
                 bucketArn:
                   type: string

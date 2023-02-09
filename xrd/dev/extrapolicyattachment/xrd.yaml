@@ -53,7 +53,7 @@ spec:
               required:
               - resourceConfig
             status:
-              description: Policy ARN
+              description: Define the observed state of the Policy
               properties:
                 policyArn:
                   type: string

@@ -11,15 +11,6 @@ spec:
   names:
     kind: XObjectStorage
     plural: xobjectstorages
-  # Each type of XR can declare any keys they write to their connection secret
-  # which will act as a filter during aggregation of the connection secret from
-  # composed resources. It's recommended to provide the set of keys here so that
-  # consumers of claims and XRs can see what to expect in the connection secret.
-  # If no key is given, then all keys in the aggregated connection secret will
-  # be written to the connection secret of the XR.
-  connectionSecretKeys:
-    - region
-    - bucket-name
   versions:
     - name: v1alpha1
       served: true
@@ -82,8 +73,6 @@ spec:
             status:
               description: ObjectStorageStatus defines the observed state of ObjectStorage
               properties:
-                bucketName:
-                  type: string
                 bucketArn:
                   type: string
               type: object
