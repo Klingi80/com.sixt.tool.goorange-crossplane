@@ -106,12 +106,10 @@ kubectl delete claim --all -n crossplane-test-namespace
 
 Delete all XRDs and Compositions
 ```bash
-kubectl delete -f xrd/dev/s3/xrd.yaml
-kubectl delete -f composition/dev/s3/composition.yaml
-kubectl delete -f xrd/dev/irsa/xrd.yaml
-kubectl delete -f composition/dev/irsa/composition.yaml
-kubectl delete -f xrd/dev/extrapolicyattachment/xrd.yaml 
-kubectl delete -f composition/dev/extrapolicyattachment/composition.yaml
+kubectl delete -f xrd/dev/s3WithIrsa/xrd.yaml
+kubectl delete -f composition/dev/s3WithIrsa/composition.yaml
+kubectl delete -f xrd/dev/s3WithPolicyAttachment/xrd.yaml 
+kubectl delete -f composition/dev/s3WithPolicyAttachment/composition.yaml
 ```
 
 # Existing Policies on Gatekeeper
