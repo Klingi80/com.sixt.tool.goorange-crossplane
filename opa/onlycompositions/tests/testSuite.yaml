@@ -8,11 +8,11 @@ tests:
   template: ../onlyxrdviacomposition-constraint-template.yaml
   constraint: ../onlyxrdviacomposition-constraint.yaml
   cases:
-  - name: claims using compostion
+  - name: claims using compostion are allowed
     object: allow.yaml
     assertions:
     - violations: no
-  - name: claims not using compostion
+  - name: claims not using compostion are blocked
     object: disallow.yaml
     assertions:
     - violations: yes

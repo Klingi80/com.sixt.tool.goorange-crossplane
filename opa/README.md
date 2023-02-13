@@ -25,4 +25,6 @@ cd ../../resource-already-managed-by-crossplane/tests
 gator verify . -v
 cd ../../service-name-pattern-match/tests
 gator verify . -v
+cd ../../namelength/tests
+gator verify . -v
 ```

@@ -8,7 +8,7 @@ tests:
   template: ../namespacewithlabelsallowxrd-constraint-template.yaml
   constraint: ../namespacewithlabelsallowxrd-constraint.yaml
   cases:
-  - name: missing label in namespace
+  - name: label missing in namespace
     object: createObject.yaml
     inventory:
     - samples/namespace_without_label.yaml # This mocks the namespace without label

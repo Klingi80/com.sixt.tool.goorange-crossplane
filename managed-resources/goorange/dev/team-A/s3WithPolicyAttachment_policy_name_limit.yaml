@@ -1,0 +1,10 @@
+---
+apiVersion: sixt.com/v1alpha1
+kind: S3WithPolicyAttachment
+metadata:
+  name: goorange-s3-with-policy-attachment-example-another
+  namespace: crossplane-test-namespace
+spec:
+  resourceConfig:
+    bucketName: goorange-s3-with-policy-attachment-example-bucket-20-testing-a-very-long-name-which-should-exceed-the-limit
+    serviceName: com-sixt-service-test

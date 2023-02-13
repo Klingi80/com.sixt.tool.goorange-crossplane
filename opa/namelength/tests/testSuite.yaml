@@ -1,0 +1,27 @@
+---
+kind: Suite
+apiVersion: test.gatekeeper.sh/v1alpha1
+metadata:
+  name: block-resource-creation-if-name-count-criteria-doesnt-match
+tests:
+- name: block-resource-creation-if-name-count-criteria-doesnt-match
+  template: ../namelength-constraint-template.yaml
+  constraint: ../namelength-constraint.yaml
+  cases:
+  - name: bucketName length more than 63
+    object: longBucketName.yaml
+    assertions:
+    - violations: yes
+  - name: serviceName length more than 43
+    object: longServiceName.yaml
+    assertions:
+    - violations: yes
+  - name: bucketName length is less than 63
+    object: validBucketName.yaml
+    assertions:
+    - violations: no
+  - name: serviceName length is less than 43
+    object: validServiceName.yaml
+    assertions:
+    - violations: no
+    

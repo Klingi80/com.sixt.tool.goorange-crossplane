@@ -8,11 +8,11 @@ tests:
   template: ../servicenamepatternmatch-constraint-template.yaml
   constraint: ../servicenamepatternmatch-constraint.yaml
   cases:
-  - name: allow
+  - name: allow claims when serviceName matches the pattern 
     object: allow.yaml
     assertions:
     - violations: no
-  - name: deny
+  - name: deny claims when serviceName matches the pattern
     object: deny.yaml
     assertions:
     - violations: yes

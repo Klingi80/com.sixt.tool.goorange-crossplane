@@ -1,0 +1,10 @@
+---
+apiVersion: sixt.com/v1alpha1
+kind: S3WithIRSA
+metadata:
+  name: goorange-s3-with-irsa-example
+  namespace: testing
+spec:
+  resourceConfig:
+    bucketName: goorange-s3-example-bucket
+    serviceName: com-sixt-service-test-too-long-service-name-43

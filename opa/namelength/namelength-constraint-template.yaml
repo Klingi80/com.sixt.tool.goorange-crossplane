@@ -1,0 +1,45 @@
+# This constraint template will look for the label allowXRD for a namespace
+# If its it allows the creation of the resource, else it prevents the creation of the resource
+---
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: namelength
+  annotations:
+    description: >-
+      Different error for bucketname(3 to 63), rolename(64) and policyname(16 to 128)
+spec:
+  crd:
+    spec:
+      names:
+        kind: NameLength
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package namelength
+
+        validateCount(count, threshold) {
+          count <= threshold
+        }
+
+        # test for counting number of character in bucketname
+        violation[{"msg": msg}] {
+          charInbucketName := count(input.review.object.spec.resourceConfig.bucketName)
+          not validateCount(charInbucketName, 63)
+          msg := sprintf(
+            "bucketName %v has %v characters. AWS only allows 63 characters, Please reconsider the name",
+            [input.review.object.spec.resourceConfig.bucketName, charInbucketName],
+          )
+        }
+
+        # test for counting number of character in rolename
+        violation[{"msg": msg}] {
+          charInServiceName := count(input.review.object.spec.resourceConfig.serviceName)
+          # 21 characters for the longest string amongst k8s-sa-go-main-stage- /k8s-sa-go-main-dev- /k8s-sa-go-main-prod-
+          totalCount := charInServiceName + 21
+          not validateCount(totalCount, 64)
+          msg := sprintf(
+            "serviceName %v has %v characters. SRE uses the service name to create RoleName. SRE reserves 21 characters. We can only accomodated extra 43 characters",
+            [input.review.object.spec.resourceConfig.serviceName, charInServiceName],
+          )
+        }
