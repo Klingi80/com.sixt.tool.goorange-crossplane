@@ -3,8 +3,7 @@ GoOrange Platform Crossplane
 
 # Details of XRD
 * S3WithIrsa: This XRD is responsible to creating a bucket, a role, a policy, a policy attachment with the role and a service account in the k8s cluster
-* ObjectStorage : This XRD is responsible for creating a S3 bucket with public access blocked and sse enabled with AES256 algorithm
-* ExtraPolicyAttachment : This XRD is reponisble for creating a new policy and attaching it to an existing Role to allow the Service account to have RW access on the S3 bucket
+* S3WithPolicyAttachment : This XRD is responsible for creating a S3 bucket with public access blocked and sse enabled with AES256 algorithm and for creating a new policy and attaching it to an existing Role to allow the Service account to have RW access on the S3 bucket
 
 # Claims for developers
 
@@ -18,34 +17,21 @@ metadata:
   namespace: crossplane-test-namespace
 spec:
   resourceConfig:
-    bucketName: goorange-s3-with-irsa-example-bucket-20
+    bucketName: goorange-s3-with-irsa-example-bucket
     serviceName: com-sixt-service-test
 ```
 
-# ObjectStorage
+# S3WithPolicyAttachment
 ```
 ---
 apiVersion: sixt.com/v1alpha1
-kind: ObjectStorage
+kind: S3WithPolicyAttachment
 metadata:
-  name: goorange-s3-example
+  name: goorange-s3-with-policy-attachment-example
   namespace: crossplane-test-namespace
 spec:
   resourceConfig:
-    bucketName: goorange-s3-example-bucket-20
-```
-
-# ExtraPolicyAttachment
-```
----
-apiVersion: sixt.com/v1alpha1
-kind: ExtraPolicyAttachment
-metadata:
-  name: goorange-extra-policy-attachment-example
-  namespace: crossplane-test-namespace
-spec:
-  resourceConfig:
-    bucketName: goorange-s3-example-bucket-20
+    bucketName: goorange-s3-with-policy-attachment-example-bucket
     serviceName: com-sixt-service-test
 ```
 
@@ -90,46 +76,25 @@ List the content of the bucket:
 kubectl run tmp-cli -n crossplane-test-namespace --rm -ti --image=public.ecr.aws/aws-cli/aws-cli --overrides='{ "spec": { "serviceAccountName": "goorange-crossplane-example-bucket-16-irsa" }  }' -- s3 ls <bucket-name>
 ```
 
-### Create Bucket
-Configure S3 XRD and Composition:
+### Create S3WithPolicyAttachment
+
+Configure S3WithPolicyAttachment XRD and Composition
 ```bash
-kubectl apply -f xrd/dev/objectstorage/xrd.yaml
-kubectl apply -f composition/dev/objectstorage/composition.yaml
-
-```
-
-Update BucketName `goorange-crossplane-example-bucket-16` with something random
-Create s3 bucket with claim:
-```
-kubectl create ns crossplane-test-namespace || true
-kubectl apply -f managed-resources/goorange/dev/team-A/ObjectStorage.yaml
-```
-
-Check the Status of s3 claim
-```bash
-kubectl describe objectstorages.sixt.com -n crossplane-test-namespace
-kubectl get objectstorages.sixt.com -n crossplane-test-namespace
-```
-
-### Create Policy Attachments
-
-Configure IRSA XRD and Composition
-```bash
-kubectl apply -f xrd/dev/extrapolicyattachment/xrd.yaml 
-kubectl apply -f composition/dev/extrapolicyattachment/composition.yaml
+kubectl apply -f xrd/dev/s3WithPolicyAttachment/xrd.yaml 
+kubectl apply -f composition/dev/s3WithPolicyAttachment/composition.yaml
 ```
 
 
-Update `bucketName` and `roleName`
-Create policy attachment usin claim
-```bash
-kubectl apply -f  managed-resources/goorange/dev/team-A/extraPolicyAttachment.yaml 
-```
+Update bucketname and serviceName
+
+`bucketName: goorange-crossplane-example-bucket-16`
+
+`serviceName: service-name-with-hyphen`
 
 Check Status
 ```bash
-kubectl describe extrapolicyattachment.sixt.com -n crossplane-test-namespace
-kubectl get extrapolicyattachment.sixt.com -n crossplane-test-namespace
+kubectl describe s3withpolicyattachment.sixt.com -n crossplane-test-namespace
+kubectl get s3withpolicyattachment.sixt.com -n crossplane-test-namespace -w # wait for the SYNCED and READY status to be True
 ```
 
 ### Clean Up
@@ -151,9 +116,7 @@ kubectl delete -f composition/dev/extrapolicyattachment/composition.yaml
 
 # Existing Policies on Gatekeeper
 
-* An OPA policy will be deployed to validate the serviceName is of the pattern for kind S3withIRSA  com-sixt-(service|api-v[1-9]{1})-[-a-z]+
-
+* An OPA policy will be deployed to validate the serviceName is of the pattern for kind S3withIRSA and S3WithPolicyAttachment com-sixt-(service|api-v[1-9]{1})-[-a-z]+
 * An OPA policy to validate the namespace has a label allowXRD
-
 * An OPA policy to only allow claims against composition managed by SRE team. This will block claims which are created directly via upbound api
-* An OPA policy to verify that a bucketName or serviceName is not re-used for an already existing resource.
+* An OPA policy to verify that a bucketName is not re-used for an already existing resource from S3WithIRSA or S3WithPolicyAttachment.

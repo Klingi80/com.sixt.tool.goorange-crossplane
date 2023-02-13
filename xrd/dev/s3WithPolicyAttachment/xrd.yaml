@@ -1,0 +1,85 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xs3withpolicyattachments.sixt.com
+spec:
+  claimNames:
+    kind: S3WithPolicyAttachment
+    plural: s3withpolicyattachments
+  # This XRD defines an XR in the 'sixt.com' API group.
+  group: sixt.com
+  names:
+    kind: XS3WithPolicyAttachment
+    plural: xs3withpolicyattachments
+  versions:
+    - name: v1alpha1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          properties:
+            spec:
+              description: S3WithIRSASpec defines the desired state of S3WithIRSA
+              properties:
+                resourceConfig:
+                  description: ResourceConfig defines general properties of this AWS resource.
+                  properties:
+                    deletionPolicy:
+                      description: Defaults to Delete
+                      enum:
+                      - Orphan
+                      type: string
+                      default: "Orphan"
+                    bucketName:
+                      description: Name of the bucket
+                      type: string
+                    providerConfigName:
+                      description: Name of the provider config used to autheicate to AWS
+                      type: string
+                      default: "aws-provider-config"
+                    region:
+                      description: Name of the region
+                      enum:
+                      - "eu-central-1"
+                      type: string
+                      default: "eu-central-1"
+                    environment:
+                      type: string
+                      default: "Dev"
+                    clusterName:
+                      type: string
+                      default: "go-main-dev"
+                    managedBy:
+                      type: string
+                      default: "Crossplane"
+                    serviceName:
+                      description: Name of the service which will also be used to generate the k8s sa
+                      type: string
+                    tags:
+                      items:
+                        properties:
+                          key:
+                            type: string
+                          value:
+                            type: string
+                        required:
+                        - key
+                        - value
+                        type: object
+                      type: array
+                  required:
+                  - bucketName
+                  - serviceName
+                  type: object
+              required:
+              - resourceConfig
+              type: object
+            status:
+              description: S3WithIRSAStatus defines the observed state of S3WithIRSA
+              properties:
+                bucketArn:
+                  type: string
+                policyArn:
+                  type: string
+              type: object
+          type: object

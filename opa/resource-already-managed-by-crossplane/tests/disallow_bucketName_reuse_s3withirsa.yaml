@@ -6,5 +6,5 @@ metadata:
   namespace: testing
 spec:
   resourceConfig:
-    bucketName: goorange-s3-with-irsa-example-bucket-21
+    bucketName: goorange-s3-example-bucket
     serviceName: com-sixt-service-test

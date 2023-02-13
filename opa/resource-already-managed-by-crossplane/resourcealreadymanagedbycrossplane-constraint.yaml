@@ -8,4 +8,4 @@ spec:
       - apiGroups: ["sixt.com"]
         kinds: ["S3WithIRSA"]
       - apiGroups: ["sixt.com"]
-        kinds: ["ObjectStorage"]
+        kinds: ["S3WithPolicyAttachment"]

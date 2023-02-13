@@ -33,22 +33,11 @@ spec:
 
         violation[{"msg": msg}] {
             review := input.review
-            s3withirsa := data.inventory.namespace[_]["sixt.com/v1alpha1"].S3WithIRSA[_]
-            review.object.spec.resourceConfig.serviceName == s3withirsa.spec.resourceConfig.serviceName
-            not identicalMetadata(s3withirsa, review)
+            s3Withpolicyattachment := data.inventory.namespace[_]["sixt.com/v1alpha1"].S3WithPolicyAttachment[_]
+            review.object.spec.resourceConfig.bucketName == s3Withpolicyattachment.spec.resourceConfig.bucketName
+            not identicalMetadata(s3Withpolicyattachment, review)
             msg := sprintf(
-              "serviceName %v is already managed by %v S3WithIRSA Claim in %v namespace",
-              [review.object.spec.resourceConfig.serviceName, s3withirsa.metadata.name, s3withirsa.metadata.namespace],
-            )
-        }
-
-        violation[{"msg": msg}] {
-            review := input.review
-            objectstorage := data.inventory.namespace[_]["sixt.com/v1alpha1"].ObjectStorage[_]
-            review.object.spec.resourceConfig.bucketName == objectstorage.spec.resourceConfig.bucketName
-            not identicalMetadata(objectstorage, review)
-            msg := sprintf(
-              "bucketName %v is already managed by %v ObjectStorage Claim in %v namespace",
-              [review.object.spec.resourceConfig.bucketName, objectstorage.metadata.name, objectstorage.metadata.namespace],
+              "bucketName %v is already managed by %v S3WithPolicyAttachment Claim in %v namespace",
+              [review.object.spec.resourceConfig.bucketName, s3Withpolicyattachment.metadata.name, s3Withpolicyattachment.metadata.namespace],
             )
         }

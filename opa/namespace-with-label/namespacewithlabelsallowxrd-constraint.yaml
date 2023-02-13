@@ -4,13 +4,8 @@ metadata:
   name: namespace-with-labels-allowxrd
 spec:
   match:
-    # scope: "Cluster"
     kinds:
       - apiGroups: ["sixt.com"]
-        kinds: ["ObjectStorage"]
-      - apiGroups: ["sixt.com"]
-        kinds: ["ExtraPolicyAttachment"]
-      - apiGroups: ["sixt.com"]
-        kinds: ["IRSA"]
-      - apiGroups: ["sixt.com"]
         kinds: ["S3WithIRSA"]
+      - apiGroups: ["sixt.com"]
+        kinds: ["S3WithPolicyAttachment"]

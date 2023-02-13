@@ -8,15 +8,29 @@ tests:
   template: ../resourcealreadymanagedbycrossplane-constraint-template.yaml
   constraint: ../resourcealreadymanagedbycrossplane-constraint.yaml
   cases:
-  - name: disallow bucketName reuse
-    object: disallow_bucketName_reuse.yaml
+  - name: disallow bucketName reuse in s3withirsa
+    object: disallow_bucketName_reuse_s3withirsa.yaml
     inventory:
-    - samples/data_object_bucketName.yaml # This contains a sample to mock an already existing object
+    - samples/data_object_bucketName_s3withirsa.yaml # This contains a sample to mock an already existing object
     assertions:
     - violations: yes
-  - name: disallow serviceName reuse
-    object: disallow_serviceName_reuse.yaml
+  - name: disallow bucketName reuse in s3withpolicyattachment
+    object: disallow_bucketName_reuse_s3withpolicyattachment.yaml
     inventory:
-    - samples/data_object_serviceName.yaml # This contains a sample to mock an already existing object
+    - samples/data_object_bucketName_s3withpolicyattachment.yaml # This contains a sample to mock an already existing object
+    assertions:
+    - violations: yes
+  - name: disallow bucketName reuse across both resources
+    object: disallow_bucketName_reuse_s3withpolicyattachment.yaml
+    inventory:
+    - samples/data_object_bucketName_s3withirsa.yaml # This contains a sample to mock an already existing object
+    - samples/data_object_bucketName_s3withpolicyattachment.yaml
+    assertions:
+    - violations: yes
+  - name: disallow bucketName reuse across both resources
+    object: disallow_bucketName_reuse_s3withirsa.yaml
+    inventory:
+    - samples/data_object_bucketName_s3withirsa.yaml # This contains a sample to mock an already existing object
+    - samples/data_object_bucketName_s3withpolicyattachment.yaml
     assertions:
     - violations: yes

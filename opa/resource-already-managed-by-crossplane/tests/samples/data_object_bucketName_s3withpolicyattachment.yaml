@@ -1,10 +1,10 @@
 ---
 apiVersion: sixt.com/v1alpha1
-kind: S3WithIRSA
+kind: S3WithPolicyAttachment
 metadata:
-  name: goorange-s3-with-irsa-example
+  name: goorange-s3-with-policy-attachment-example
   namespace: it-integration
 spec:
   resourceConfig:
-    bucketName: goorange-s3-with-irsa-example-bucket-20
+    bucketName: goorange-s3-example-bucket
     serviceName: com-sixt-service-testing

@@ -1,9 +1,0 @@
----
-apiVersion: sixt.com/v1alpha1
-kind: ObjectStorage
-metadata:
-  name: goorange-s3-example
-  namespace: crossplane-test-namespace
-spec:
-  resourceConfig:
-    bucketName: goorange-s3-with-irsa-example-bucket-20

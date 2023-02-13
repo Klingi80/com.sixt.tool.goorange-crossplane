@@ -16,4 +16,4 @@ spec:
         kind: "S3WithIRSA"
       - group: "sixt.com"
         version: "v1alpha1"
-        kind: "ObjectStorage"
+        kind: "S3WithPolicyAttachment"

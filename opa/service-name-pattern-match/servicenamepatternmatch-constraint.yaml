@@ -4,7 +4,9 @@ metadata:
   name: service-name-pattern-match
 spec:
   match:
-    # scope: "Cluster"
     kinds:
       - apiGroups: ["sixt.com"]
         kinds: ["S3WithIRSA"]
+      - apiGroups: ["sixt.com"]
+        kinds: ["S3WithPolicyAttachment"]
+        
