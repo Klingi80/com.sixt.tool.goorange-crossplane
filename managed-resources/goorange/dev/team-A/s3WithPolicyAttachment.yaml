@@ -6,5 +6,5 @@ metadata:
   namespace: crossplane-test-namespace
 spec:
   resourceConfig:
-    bucketName: goorange-s3-with-policy-attachment-example-bucket-20
+    bucketName: goorange-s3-with-policy-attachment-example-bucket
     serviceName: com-sixt-service-test

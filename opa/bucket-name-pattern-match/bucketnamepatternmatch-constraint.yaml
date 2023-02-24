@@ -1,0 +1,12 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: BucketNamePatternMatch
+metadata:
+  name: bucket-name-pattern-match
+spec:
+  match:
+    kinds:
+      - apiGroups: ["sixt.com"]
+        kinds: ["S3WithIRSA"]
+      - apiGroups: ["sixt.com"]
+        kinds: ["S3WithPolicyAttachment"]
+        

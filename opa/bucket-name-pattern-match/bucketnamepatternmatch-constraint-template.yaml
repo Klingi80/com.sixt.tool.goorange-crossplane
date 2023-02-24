@@ -1,0 +1,27 @@
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: bucketnamepatternmatch
+  annotations:
+    description: >-
+      The bucket name provided by the developer in the claim should match the pattern sixt-[-a-z1-9]+-(dev|stage|prod)
+spec:
+  crd:
+    spec:
+      names:
+        kind: BucketNamePatternMatch
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package bucketnamepatternmatch
+
+        default match_pattern = false
+
+        match_pattern = true {
+          regex.match("sixt-[-a-z1-9]+-(dev|stage|prod)", input.review.object.spec.resourceConfig.bucketName)
+        }
+
+        violation[{"msg": msg}] {
+          not match_pattern
+          msg := "The bucketName should be of the pattern sixt-[-a-z1-9]+-(dev|stage|prod) \nExample: sixt-my-test-bucket-dev or sixt-my-test-bucket-stage or sixt-my-test-bucket-prod"
+        }

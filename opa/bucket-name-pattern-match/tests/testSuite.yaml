@@ -1,0 +1,18 @@
+---
+kind: Suite
+apiVersion: test.gatekeeper.sh/v1alpha1
+metadata:
+  name: bucket-name-pattern-match
+tests:
+- name: bucket-name-pattern-match
+  template: ../bucketnamepatternmatch-constraint-template.yaml
+  constraint: ../bucketnamepatternmatch-constraint.yaml
+  cases:
+  - name: allow claims when bucketName matches the pattern 
+    object: allow.yaml
+    assertions:
+    - violations: no
+  - name: deny claims when bucketName matches the pattern
+    object: deny.yaml
+    assertions:
+    - violations: yes
