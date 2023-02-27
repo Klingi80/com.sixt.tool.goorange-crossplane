@@ -104,7 +104,7 @@ spec:
             - fromFieldPath: spec.resourceConfig.bucketName
             strategy: string
             string:
-              fmt: "k8s-sa-policy-%s-%s"
+              fmt: "k8s-sa-dev-policy-%s-%s"
           toFieldPath: metadata.annotations[crossplane.io/external-name]
         - type: ToCompositeFieldPath
           fromFieldPath: status.atProvider.arn
