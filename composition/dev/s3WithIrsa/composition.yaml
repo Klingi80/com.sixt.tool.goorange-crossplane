@@ -53,11 +53,11 @@ spec:
         apiVersion: s3.aws.upbound.io/v1beta1
         kind: BucketPublicAccessBlock
         spec:
-          blockPublicAcls: true
-          blockPublicPolicy: true
-          ignorePublicAcls: true
-          restrictPublicBuckets: true
           forProvider:
+            blockPublicAcls: true
+            blockPublicPolicy: true
+            ignorePublicAcls: true
+            restrictPublicBuckets: true
             bucketSelector:
               matchControllerRef: true
       patches:
