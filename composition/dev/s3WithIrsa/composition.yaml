@@ -139,6 +139,7 @@ spec:
             - fromFieldPath: spec.resourceConfig.eksOIDC
             - fromFieldPath: metadata.labels[crossplane.io/claim-namespace]
             - fromFieldPath: spec.resourceConfig.serviceName
+            - fromFieldPath: spec.resourceConfig.eksOIDC
             strategy: string
             string:
               fmt: |
@@ -153,7 +154,8 @@ spec:
                       "Action": "sts:AssumeRoleWithWebIdentity",
                       "Condition": {
                         "StringEquals": {
-                          "%s:sub": "system:serviceaccount:%s:%s"
+                          "%s:sub": "system:serviceaccount:%s:%s",
+                          "%s:aud": "sts.amazonaws.com"
                         }
                       }
                     }
