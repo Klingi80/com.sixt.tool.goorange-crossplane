@@ -102,6 +102,26 @@ spec:
           patchSetName: common-fields
         - fromFieldPath: spec.resourceConfig.region
           toFieldPath: spec.forProvider.region
+    - name: s3-bucketlifecycleconfiguration
+      base:
+        apiVersion: s3.aws.upbound.io/v1beta1
+        kind: BucketLifecycleConfiguration
+        spec:
+          forProvider:
+            bucketSelector:
+              matchControllerRef: true
+            rule:
+              - id: "Cleanup of Non Current Versions"
+                noncurrentVersionExpiration:
+                  - noncurrentDays: 90
+                status: Enabled
+      patches:
+        - type: PatchSet
+          patchSetName: deletion-policy-fields
+        - type: PatchSet
+          patchSetName: common-fields
+        - fromFieldPath: spec.resourceConfig.region
+          toFieldPath: spec.forProvider.region
     - name: iam-policy
       base: 
         apiVersion: iam.aws.upbound.io/v1beta1
