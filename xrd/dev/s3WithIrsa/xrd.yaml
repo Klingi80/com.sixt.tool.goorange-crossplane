@@ -37,7 +37,7 @@ spec:
                     eksOIDC:
                       description: EKS Cluster OIDC Endpoint
                       type: string
-                      default: "oidc.eks.eu-central-1.amazonaws.com/id/4A85FB28B0938A6568CAB365A330333B"
+                      default: "oidc.eks.eu-central-1.amazonaws.com/id/F13E3E4BE0537282A52062FC9B6127A7"
                     deletionPolicy:
                       description: Defaults to Delete
                       enum:
